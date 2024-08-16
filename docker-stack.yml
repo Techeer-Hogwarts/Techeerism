@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Main services
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    deploy:
+      placement:
+        constraints:
+          - node.labels.instance == main
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - main-network
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    ports:
+      - "9000:9000"
+    deploy:
+      placement:
+        constraints:
+          - node.labels.instance == main
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - main-network
+
+  # Monitoring services
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    deploy:
+      placement:
+        constraints:
+          - node.labels.instance == monitoring
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - main-network
+
+networks:
+  main-network:
+    driver: overlay
+
+volumes:
+  portainer_data:
+  grafana_data:

@@ -40,12 +40,30 @@ pipeline {
                         cd ~/Techeerism
                         git pull origin main
                         ls -al && pwd
-                        git pull origin main
                         docker node ls
-                        docker stack deploy -c ${DOCKER_COMPOSE_FILE} techeerism'
-                        docker node ls
-                        sleep 5
-                        docker service scale techeerism_nest=1
+                        docker stack deploy -c ${DOCKER_COMPOSE_FILE} techeerism --detach=true'
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Scale') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'master'
+                }
+            }
+            steps {
+                script {
+                    sshagent(['deploy-server-ssh']) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
+                        cd ~/Techeerism
+                        docker stack ps techeerism
+                        chmod +x ${SCALER}
+                        ./${SCALER}'
                         """
                     }
                 }

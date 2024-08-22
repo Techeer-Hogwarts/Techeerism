@@ -43,6 +43,7 @@ pipeline {
                         git pull origin main
                         docker node ls
                         docker stack deploy -c ${DOCKER_COMPOSE_FILE} techeerism'
+                        docker node ls
                         sleep 5
                         docker service scale techeerism_nest=1
                         """

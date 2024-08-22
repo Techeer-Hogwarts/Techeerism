@@ -41,7 +41,7 @@ pipeline {
                         git pull origin main
                         ls -al && pwd
                         git pull origin main
-                        docker stack -c ${DOCKER_COMPOSE_FILE} deploy techeerism'
+                        docker stack deploy -c ${DOCKER_COMPOSE_FILE} techeerism'
                         sleep 5
                         chmod +x ${SCALER}
                         ./${SCALER}

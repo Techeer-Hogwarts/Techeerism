@@ -81,6 +81,8 @@ services:
       - "9090:9090"
     networks:
       - main-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
     deploy:
       replicas: 1
       placement:
@@ -91,7 +93,7 @@ services:
     image: google/cadvisor:latest
     volumes:
       - /:/rootfs:ro
-      - /var/run:/var/run:ro
+      - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /cgroup:/cgroup:ro

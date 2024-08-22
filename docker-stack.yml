@@ -75,6 +75,7 @@ services:
   
   prometheus:
     image: prom/prometheus:latest
+    user: root
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -105,14 +106,12 @@ services:
   
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.8.1
-    container_name: node_exporter
     ports:
       - "9100:9100"
     command:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
-    restart: unless-stopped
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro

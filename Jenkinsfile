@@ -8,12 +8,12 @@ pipeline {
     }
 
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         cleanWs()
-        //         git branch: 'main', url: 'https://github.com/Techeer-Hogwarts/Techeerism.git'
-        //     }
-        // }
+        stage('Checkout') {
+            steps {
+                cleanWs()
+                git branch: 'main', url: 'https://github.com/Techeer-Hogwarts/Techeerism.git'
+            }
+        }
 
         stage('Test') {
             steps {
@@ -42,6 +42,7 @@ pipeline {
                         ls -al && pwd
                         git pull origin main
                         docker stack deploy -c ${DOCKER_COMPOSE_FILE} techeerism'
+                        docker node ls
                         sleep 5
                         docker service scale techeerism_nest=1
                         """

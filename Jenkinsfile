@@ -43,8 +43,7 @@ pipeline {
                         git pull origin main
                         docker stack deploy -c ${DOCKER_COMPOSE_FILE} techeerism'
                         sleep 5
-                        chmod +x ${SCALER}
-                        ./${SCALER}
+                        docker service scale techeerism_nest=1
                         """
                     }
                 }

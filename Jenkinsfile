@@ -8,12 +8,12 @@ pipeline {
     }
 
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         cleanWs()
-        //         git branch: 'main', url: 'https://github.com/Techeer-Hogwarts/Techeerism.git'
-        //     }
-        // }
+        stage('Checkout') {
+            steps {
+                cleanWs()
+                git branch: 'main', url: 'https://github.com/Techeer-Hogwarts/Techeerism.git'
+            }
+        }
 
         stage('Test') {
             steps {

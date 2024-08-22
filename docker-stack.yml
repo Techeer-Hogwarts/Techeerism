@@ -74,16 +74,11 @@ services:
       - main-network
   
   prometheus:
-    image: prom/prometheus:latest
-    user: root
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    image: teami2022/promtest:main
     ports:
       - "9090:9090"
     networks:
       - main-network
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
     deploy:
       replicas: 1
       placement:

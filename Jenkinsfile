@@ -41,8 +41,8 @@ pipeline {
                         git pull origin main
                         ls -al && pwd
                         git pull origin main
-                        docker stack deploy -c ${DOCKER_COMPOSE_FILE} techeerism'
                         docker node ls
+                        docker stack deploy -c ${DOCKER_COMPOSE_FILE} techeerism'
                         sleep 5
                         docker service scale techeerism_nest=1
                         """
@@ -63,11 +63,11 @@ pipeline {
         }
         success {
             echo 'Build and deployment successful!'
-            slackSend message: "Service deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>), color: 'good'"
+            slackSend message: "Service deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", color: 'good'
         }
         failure {
             echo 'Build or deployment failed.'
-            slackSend failOnError: true, message: "Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>), color: 'danger'"
+            slackSend failOnError: true, message: "Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", color: 'danger'
         }
     }
 }

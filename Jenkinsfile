@@ -32,7 +32,7 @@ pipeline {
             }
             steps {
                 script {
-                    sshagent(['deploy-server-access']) {
+                    sshagent(['deploy-server-ssh']) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
                         rm -rf ~/Techeerism

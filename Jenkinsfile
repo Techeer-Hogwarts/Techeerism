@@ -47,6 +47,13 @@ pipeline {
                 }
             }
         }
+        stage('Pause Before Scaling') {
+            steps {
+                script {
+                    sleep 10
+                }
+            }
+        }
 
         stage('Scale') {
             when {

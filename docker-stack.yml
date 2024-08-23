@@ -77,6 +77,7 @@ services:
     image: prom/prometheus:latest
     ports:
       - "9090:9090"
+    user: root
     networks:
       - main-network
     extra_hosts:

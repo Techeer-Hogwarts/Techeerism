@@ -99,8 +99,6 @@ services:
       - main-network
     deploy:
       mode: global
-      cap_add:
-        - SYS_ADMIN
   
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.8.1

@@ -152,8 +152,6 @@ services:
 networks:
   main-network:
     driver: overlay
-    config:
-      - gateway: 10.0.1.1
 
 volumes:
   portainer_data:

@@ -3,18 +3,21 @@ global:
 
 scrape_configs:
   - job_name: 'node_exporter'
-    dns_sd_configs:
-      - names:
-          - 'tasks.node-exporter'
-        type: 'A'
-        port: 9100
+    dockerswarm_sd_configs:
+      - role: 'service'
+    relabel_configs:
+      - source_labels: [__meta_docker_swarm_service_name]
+        target_label: job
+        replacement: 'node-exporter'
 
-  # - job_name: 'cadvisor'
-  #   dns_sd_configs:
-  #     - names:
-  #         - 'tasks.cadvisor'
-  #       type: 'A'
-  #       port: 8090
-  - job_name: docker
+  - job_name: 'cadvisor'
+    dockerswarm_sd_configs:
+      - role: 'service'
+    relabel_configs:
+      - source_labels: [__meta_docker_swarm_service_name]
+        target_label: job
+        replacement: 'cadvisor'
+
+  - job_name: 'docker_metrics'
     static_configs:
       - targets: ['host.docker.internal:9323']

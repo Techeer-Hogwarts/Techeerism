@@ -86,32 +86,48 @@ services:
           - node.labels.instance == monitoring
 
   cadvisor:
-    image: docker
-    volumes: 
-        - /var/run/docker.sock:/var/run/docker.sock
-    entrypoint: ["/bin/sh","-c"]
-    networks:
-      - main-network
-    ports:
-      - "8090:8080"
+    image: google/cadvisor:latest
+    privileged: true  # Run the container in privileged mode
     deploy:
       mode: global
-    environment:
-      - PARENT={{.Task.Name}}
-      - CHILDNAME={{.Service.Name}}_sidecar.{{.Node.ID}}.{{.Task.ID}}
-      - CADVISOR_VERSION=latest
-    command: 
-    - |
-      exec docker run -i --rm --network="container:$${PARENT}" \
-            --volume=/:/rootfs:ro \
-            --volume=/var/run:/var/run:ro  \
-            --volume=/sys:/sys:ro  \
-            --volume=/var/lib/docker/:/var/lib/docker:ro \
-            --volume=/dev/disk/:/dev/disk:ro \
-            --name $${CHILDNAME} \
-            --privileged \
-            --device=/dev/kmsg \
-            gcr.io/cadvisor/cadvisor:$${CADVISOR_VERSION}
+    devices:
+      - "/dev/kmsg:/dev/kmsg"  # Map the device from the host to the container
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8090:8080"
+    networks:
+      - main-network
+  # cadvisor:
+  #   image: docker
+  #   volumes: 
+  #       - /var/run/docker.sock:/var/run/docker.sock
+  #   entrypoint: ["/bin/sh","-c"]
+  #   networks:
+  #     - main-network
+  #   ports:
+  #     - "8090:8080"
+  #   deploy:
+  #     mode: global
+  #   environment:
+  #     - PARENT={{.Task.Name}}
+  #     - CHILDNAME={{.Service.Name}}_sidecar.{{.Node.ID}}.{{.Task.ID}}
+  #     - CADVISOR_VERSION=latest
+  #   command: 
+  #   - |
+  #     exec docker run -i --rm --network="container:$${PARENT}" \
+  #           --volume=/:/rootfs:ro \
+  #           --volume=/var/run:/var/run:ro  \
+  #           --volume=/sys:/sys:ro  \
+  #           --volume=/var/lib/docker/:/var/lib/docker:ro \
+  #           --volume=/dev/disk/:/dev/disk:ro \
+  #           --name $${CHILDNAME} \
+  #           --privileged \
+  #           --device=/dev/kmsg \
+  #           gcr.io/cadvisor/cadvisor:$${CADVISOR_VERSION}
   
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.8.1

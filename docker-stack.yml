@@ -99,7 +99,7 @@ services:
       - main-network
     deploy:
       mode: global
-      capabilities:
+      cap_add:
         - SYS_ADMIN
   
   node-exporter:

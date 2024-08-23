@@ -92,12 +92,15 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/kmsg:/dev/kmsg:ro
     ports:
       - "8090:8080"
     networks:
       - main-network
     deploy:
       mode: global
+      capabilities:
+        - SYS_ADMIN
   
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.8.1

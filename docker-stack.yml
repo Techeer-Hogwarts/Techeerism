@@ -74,18 +74,22 @@ services:
       - main-network
   
   prometheus:
-    image: teami2022/promtest:v1.0.2
+    image: prom/prometheus:latest
     ports:
       - "9090:9090"
     networks:
       - main-network
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
     deploy:
       replicas: 1
       placement:
         constraints:
-          - node.labels.instance == monitoring
+          - node.labels.instance == main
 
   # cadvisor:
   #   image: google/cadvisor:latest

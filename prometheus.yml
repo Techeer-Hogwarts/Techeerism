@@ -15,3 +15,6 @@ scrape_configs:
   #         - 'tasks.cadvisor'
   #       type: 'A'
   #       port: 8090
+  - job_name: docker
+    static_configs:
+      - targets: ['host.docker.internal:9323']

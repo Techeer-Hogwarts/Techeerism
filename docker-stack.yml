@@ -91,7 +91,7 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
     entrypoint: ["/bin/sh","-c"]
     networks:
-    - monitoring
+      - main-network
     deploy:
       mode: global
     environment:

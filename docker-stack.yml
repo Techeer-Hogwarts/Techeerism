@@ -85,7 +85,7 @@ services:
       replicas: 1
       placement:
         constraints:
-          - node.labels.instance == monitoring
+          - node.labels.instance == main
 
   # cadvisor:
   #   image: google/cadvisor:latest

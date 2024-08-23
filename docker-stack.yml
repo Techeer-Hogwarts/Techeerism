@@ -95,8 +95,8 @@ services:
     image: google/cadvisor:latest
     deploy:
       mode: global
-      labels:
-        - prometheus-job=cadvisor
+    labels:
+      - prometheus-job=cadvisor
     ports:
       - "8080:8080"
     volumes:
@@ -169,8 +169,8 @@ services:
       - main-network
     deploy:
       mode: global
-      labels:
-        - prometheus-job=node-exporter
+    labels:
+      - prometheus-job=node-exporter
 
 networks:
   main-network:

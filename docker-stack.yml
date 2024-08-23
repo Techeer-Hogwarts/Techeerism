@@ -79,6 +79,8 @@ services:
       - "9090:9090"
     networks:
       - main-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     deploy:
       replicas: 1
       placement:

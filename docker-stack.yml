@@ -11,7 +11,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
+      - "8090:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
@@ -95,8 +95,10 @@ services:
     image: google/cadvisor:latest
     deploy:
       mode: global
+      labels:
+        - prometheus-job=cadvisor
     ports:
-      - "8090:8080"
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /:/rootfs:ro
@@ -167,6 +169,8 @@ services:
       - main-network
     deploy:
       mode: global
+      labels:
+        - prometheus-job=node-exporter
 
 networks:
   main-network:

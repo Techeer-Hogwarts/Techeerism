@@ -9,6 +9,8 @@ services:
       - "--providers.docker.swarmMode=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entryPoints.web.http.redirections.entrypoint.scheme=https"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.email=whysano517@gmail.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
@@ -30,24 +32,25 @@ services:
       - "traefik-certificates:/letsencrypt"  
     networks:
       - main-network
+      - proxy
     deploy:
       replicas: 1
       placement:
         constraints:
           - node.labels.instance == main
       labels:
-        - 'traefik.http.routers.http-catchall.rule=PathPrefix(`/`)'
-        - 'traefik.http.routers.http-catchall.entrypoints=web'
-        - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
-        - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
+        # - 'traefik.http.routers.http-catchall.rule=PathPrefix(`/`)'
+        # - 'traefik.http.routers.http-catchall.entrypoints=web'
+        # - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
+        # - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
         - "traefik.enable=true"
-        - "traefik.http.routers.traefik.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/traefik`)"
-        - 'traefik.http.routers.traefik.entrypoints=websecure'
-        - "traefik.http.routers.traefik.service=api@internal"
-        - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.mydashboard.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/traefik`)"
+        - 'traefik.http.routers.mydashboard.entrypoints=websecure'
+        - "traefik.http.routers.mydashboard.service=api@internal"
+        - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
         - "traefik.http.services.api@internal.loadbalancer.server.port=8090"
-        - "traefik.http.routers.traefik.middlewares=traefik-stripprefix"
-        - "traefik.http.middlewares.traefik-stripprefix.stripprefix.prefixes=/traefik"
+        - "traefik.http.routers.mydashboard.middlewares=mydashboard-stripprefix"
+        - "traefik.http.middlewares.mydashboard-stripprefix.stripprefix.prefixes=/traefik"
       #   - "traefik.http.routers.traefik.middlewares=auth"
       #   - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
 
@@ -73,11 +76,13 @@ services:
       - portainer_data:/data
     networks:
       - main-network
+      - proxy
 
   nest:
     image: suhach0523/techeerism-nest:1.0.7
     networks:
       - main-network
+      - proxy
     deploy:
       replicas: 2
       placement:
@@ -119,6 +124,7 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - main-network
+      - proxy
 
   
   prometheus:
@@ -180,6 +186,8 @@ services:
 networks:
   main-network:
     driver: overlay
+  proxy:
+    external: true
 
 volumes:
   traefik-certificates:

@@ -62,13 +62,13 @@ services:
     networks:
       - main-network
     labels:
-        - traefik.enable=true
-        - traefik.http.services.portainer.loadbalancer.server.port=9000
-        - traefik.http.routers.portainer.entrypoints=websecure
-        - traefik.http.routers.portainer.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/portainer`)
-        - traefik.http.routers.portainer.middlewares=portainer-stripprefix
-        - traefik.http.middlewares.portainer-stripprefix.stripprefix.prefixes=/portainer
-        - traefik.http.routers.portainer.tls.certresolver=letsencrypt
+      - traefik.enable=true
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
+      - traefik.http.routers.portainer.entrypoints=websecure
+      - traefik.http.routers.portainer.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/portainer`)
+      - traefik.http.routers.portainer.middlewares=portainer-stripprefix
+      - traefik.http.middlewares.portainer-stripprefix.stripprefix.prefixes=/portainer
+      - traefik.http.routers.portainer.tls.certresolver=letsencrypt
 
   nest:
     image: suhach0523/techeerism-nest:1.0.7
@@ -108,13 +108,13 @@ services:
     networks:
       - main-network
     labels:
-        - traefik.enable=true
-        - traefik.http.services.grafana.loadbalancer.server.port=3000
-        - traefik.http.routers.grafana.entrypoints=websecure
-        - traefik.http.routers.grafana.tls.certresolver=letsencrypt
-        - traefik.http.routers.grafana.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/grafana`)
-        - traefik.http.routers.grafana.middlewares=grafana-stripprefix
-        - traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/grafana
+      - traefik.enable=true
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+      - traefik.http.routers.grafana.entrypoints=websecure
+      - traefik.http.routers.grafana.tls.certresolver=letsencrypt
+      - traefik.http.routers.grafana.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/grafana`)
+      - traefik.http.routers.grafana.middlewares=grafana-stripprefix
+      - traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/grafana
 
   
   prometheus:

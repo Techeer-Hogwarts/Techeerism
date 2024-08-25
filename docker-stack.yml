@@ -45,13 +45,13 @@ services:
         # - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
         # - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
         - "traefik.enable=true"
-        - "traefik.http.routers.mydashboard.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/traefik`)"
+        - "traefik.http.routers.mydashboard.rule=Host(`api.techeerzip.cloud`)"
         - 'traefik.http.routers.mydashboard.entrypoints=websecure'
         - "traefik.http.routers.mydashboard.service=api@internal"
         - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
         - "traefik.http.services.api@internal.loadbalancer.server.port=8090"
-        - "traefik.http.routers.mydashboard.middlewares=mydashboard-stripprefix"
-        - "traefik.http.middlewares.mydashboard-stripprefix.stripprefix.prefixes=/traefik"
+        # - "traefik.http.routers.mydashboard.middlewares=mydashboard-stripprefix"
+        # - "traefik.http.middlewares.mydashboard-stripprefix.stripprefix.prefixes=/traefik"
       #   - "traefik.http.routers.traefik.middlewares=auth"
       #   - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
 

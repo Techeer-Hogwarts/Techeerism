@@ -30,6 +30,12 @@ services:
       - "traefik-certificates:/letsencrypt"  
     networks:
       - main-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`api.techeerzip.cloud`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
     deploy:
       replicas: 1
       placement:

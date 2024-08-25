@@ -7,7 +7,7 @@ services:
       # - "--api.insecure=true"
       - "--providers.docker=true" 
       - "--providers.docker.swarmMode=true"
-      # - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.email=whysano517@gmail.com"
@@ -22,7 +22,7 @@ services:
       - "--entryPoints.metrics.address=:8091"
       - "--metrics.prometheus.entryPoint=metrics"
     ports:
-      # - "80:80"
+      - "80:80"
       - "443:443"
       - "8090:8080"
     volumes:
@@ -102,6 +102,14 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - main-network
+    labels:
+        - traefik.enable=true
+        - traefik.http.services.grafana.loadbalancer.server.port=3000
+        - traefik.http.routers.grafana.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/manage/grafana`)
+        - traefik.http.routers.grafana.middlewares=grafana-stripprefix
+        - traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/manage/grafana
+        - traefik.http.routers.grafana.entrypoints=websecure
+        - traefik.http.routers.grafana.tls.certresolver=letsencrypt
   
   prometheus:
     image: prom/prometheus:latest
@@ -122,14 +130,6 @@ services:
       placement:
         constraints:
           - node.labels.instance == main
-    labels:
-        - traefik.enable=true
-        - traefik.http.services.grafana.loadbalancer.server.port=3000
-        - traefik.http.routers.grafana.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/manage/grafana`)
-        - traefik.http.routers.grafana.middlewares=grafana-stripprefix
-        - traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/manage/grafana
-        - traefik.http.routers.grafana.entrypoints=websecure
-        - traefik.http.routers.grafana.tls.certresolver=letsencrypt
     
   cadvisor:
     image: google/cadvisor:latest

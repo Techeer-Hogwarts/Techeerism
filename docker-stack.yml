@@ -32,7 +32,6 @@ services:
       - "traefik-certificates:/letsencrypt"  
     networks:
       - main-network
-      - proxy
     deploy:
       replicas: 1
       placement:
@@ -76,13 +75,11 @@ services:
       - portainer_data:/data
     networks:
       - main-network
-      - proxy
 
   nest:
     image: suhach0523/techeerism-nest:1.0.7
     networks:
       - main-network
-      - proxy
     deploy:
       replicas: 2
       placement:
@@ -124,7 +121,6 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - main-network
-      - proxy
 
   
   prometheus:
@@ -186,8 +182,6 @@ services:
 networks:
   main-network:
     driver: overlay
-  proxy:
-    external: true
 
 volumes:
   traefik-certificates:

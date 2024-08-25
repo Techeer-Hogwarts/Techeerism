@@ -24,7 +24,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
+      - "8090:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "traefik-certificates:/letsencrypt"  
@@ -32,11 +32,11 @@ services:
       - main-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`api.techeerzip.cloud`) && (PathPrefix(`/traefik`)"
+      - "traefik.http.routers.traefik.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/traefik`)"
       - 'traefik.http.routers.traefik.entrypoints=websecure'
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
-      - "traefik.http.services.api@internal.loadbalancer.server.port=8080"
+      - "traefik.http.services.api@internal.loadbalancer.server.port=8090"
       - "traefik.http.routers.traefik.middlewares=traefik-stripprefix"
       - "traefik.http.middlewares.traefik-stripprefix.stripprefix.prefixes=/traefik"
     #   - "traefik.http.routers.traefik.middlewares=auth"
@@ -65,7 +65,9 @@ services:
         - traefik.enable=true
         - traefik.http.services.portainer.loadbalancer.server.port=9000
         - traefik.http.routers.portainer.entrypoints=websecure
-        - traefik.http.routers.portainer.rule=Host(`portainer.techeerzip.cloud`)
+        - traefik.http.routers.portainer.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/portainer`)
+        - traefik.http.routers.portainer.middlewares=portainer-stripprefix
+        - traefik.http.middlewares.portainer-stripprefix.stripprefix.prefixes=/portainer
         - traefik.http.routers.portainer.tls.certresolver=letsencrypt
 
   nest:
@@ -142,7 +144,7 @@ services:
     labels:
       - prometheus-job=cadvisor
     ports:
-      - "8090:8080"
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /:/rootfs:ro
@@ -151,51 +153,6 @@ services:
       - /var/lib/docker:/var/lib/docker:ro
     networks:
       - main-network
-
-  # cadvisor:
-  #   image: google/cadvisor:latest
-  #   privileged: true  # Run the container in privileged mode
-  #   deploy:
-  #     mode: global
-  #   devices:
-  #     - "/dev/kmsg:/dev/kmsg"  # Map the device from the host to the container
-  #   volumes:
-  #     - /:/rootfs:ro
-  #     - /var/run:/var/run:rw
-  #     - /sys:/sys:ro
-  #     - /var/lib/docker/:/var/lib/docker:ro
-  #     - /dev/disk/:/dev/disk:ro
-  #   ports:
-  #     - "8090:8080"
-  #   networks:
-  #     - main-network
-  # cadvisor:
-  #   image: docker
-  #   volumes: 
-  #       - /var/run/docker.sock:/var/run/docker.sock
-  #   entrypoint: ["/bin/sh","-c"]
-  #   networks:
-  #     - main-network
-  #   ports:
-  #     - "8090:8080"
-  #   deploy:
-  #     mode: global
-  #   environment:
-  #     - PARENT={{.Task.Name}}
-  #     - CHILDNAME={{.Service.Name}}_sidecar.{{.Node.ID}}.{{.Task.ID}}
-  #     - CADVISOR_VERSION=latest
-  #   command: 
-  #   - |
-  #     exec docker run -i --rm --network="container:$${PARENT}" \
-  #           --volume=/:/rootfs:ro \
-  #           --volume=/var/run:/var/run:ro  \
-  #           --volume=/sys:/sys:ro  \
-  #           --volume=/var/lib/docker/:/var/lib/docker:ro \
-  #           --volume=/dev/disk/:/dev/disk:ro \
-  #           --name $${CHILDNAME} \
-  #           --privileged \
-  #           --device=/dev/kmsg \
-  #           gcr.io/cadvisor/cadvisor:$${CADVISOR_VERSION}
   
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.8.1

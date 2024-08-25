@@ -4,7 +4,7 @@ services:
   traefik:
     image: traefik:v2.9
     command:
-      # - "--api.insecure=true"
+      - "--api.insecure=false"
       - "--providers.docker=true" 
       - "--providers.docker.swarmMode=true"
       - "--entrypoints.web.address=:80"
@@ -58,12 +58,12 @@ services:
       - main-network
     labels:
         - traefik.enable=true
+        - traefik.http.routers.portainer.entrypoints=websecure
+        - traefik.http.routers.portainer.tls.certresolver=letsencrypt
         - traefik.http.services.portainer.loadbalancer.server.port=9000
         - traefik.http.routers.portainer.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/manage/portainer`)
         - traefik.http.routers.portainer.middlewares=portainer-stripprefix
         - traefik.http.middlewares.portainer-stripprefix.stripprefix.prefixes=/manage/portainer
-        - traefik.http.routers.portainer.entrypoints=websecure
-        - traefik.http.routers.portainer.tls.certresolver=letsencrypt
     
   nest:
     image: suhach0523/techeerism-nest:1.0.7

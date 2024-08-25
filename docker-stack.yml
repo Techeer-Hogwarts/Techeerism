@@ -36,6 +36,10 @@ services:
         constraints:
           - node.labels.instance == main
       labels:
+        - 'traefik.http.routers.http-catchall.rule=PathPrefix(`/`)'
+        - 'traefik.http.routers.http-catchall.entrypoints=web'
+        - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
+        - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
         - "traefik.enable=true"
         - "traefik.http.routers.traefik.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/traefik`)"
         - 'traefik.http.routers.traefik.entrypoints=websecure'

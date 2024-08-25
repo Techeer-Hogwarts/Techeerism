@@ -4,7 +4,8 @@ pipeline {
     environment {
         DOCKER_COMPOSE_FILE = 'docker-stack.yml'
         SCALER='scaler.sh'
-        DEPLOY_SERVER ="ubuntu@34.46.89.242"
+        DEPLOY_SERVER ="${SERVER_MAIN}"
+        TRAEFIK_AUTH="${TRAEFIK_AUTH}"
     }
 
     stages {
@@ -35,6 +36,7 @@ pipeline {
                     sshagent(['deploy-server-ssh']) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
+                        export TRAEFIK_AUTH=${TRAEFIK_AUTH}
                         rm -rf ~/Techeerism
                         git clone https://github.com/Techeer-Hogwarts/Techeerism.git
                         cd ~/Techeerism

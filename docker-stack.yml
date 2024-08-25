@@ -4,18 +4,38 @@ services:
   traefik:
     image: traefik:v2.9
     command:
-      - "--api.insecure=true"
+      # - "--api.insecure=true"
+      - "--providers.docker=true" 
       - "--providers.docker.swarmMode=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=whysano517@gmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+      - "--api.dashboard=true"
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.buckets=0.100000, 0.300000, 1.200000, 5.000000"
+      - "--metrics.prometheus.addEntryPointsLabels=true"
+      - "--metrics.prometheus.addServicesLabels=true"
+      - "--entryPoints.metrics.address=:8091"
+      - "--metrics.prometheus.entryPoint=metrics"
     ports:
       - "80:80"
       - "443:443"
       - "8090:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "traefik-certificates:/letsencrypt"  
     networks:
       - main-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`api.techeerzip.cloud`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
     deploy:
       replicas: 1
       placement:
@@ -36,7 +56,15 @@ services:
       - portainer_data:/data
     networks:
       - main-network
-  
+    labels:
+        - traefik.enable=true
+        - traefik.http.services.portainer.loadbalancer.server.port=9000
+        - traefik.http.routers.portainer.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/manage/portainer`)
+        - traefik.http.routers.portainer.middlewares=portainer-stripprefix
+        - traefik.http.middlewares.portainer-stripprefix.stripprefix.prefixes=/manage/portainer
+        - traefik.http.routers.portainer.entrypoints=websecure
+        - traefik.http.routers.portainer.tls.certresolver=letsencrypt
+    
   nest:
     image: suhach0523/techeerism-nest:1.0.7
     networks:
@@ -54,9 +82,11 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.services.nest.loadbalancer.server.port=8000
-        - traefik.http.routers.nest.rule=Host(`nest.localhost`) && PathPrefix(`/api/v1`)
+        - traefik.http.routers.nest.entrypoints=websecure
+        - traefik.http.routers.nest.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v1`)
         - traefik.http.routers.nest.middlewares=nest-stripprefix
         - traefik.http.middlewares.nest-stripprefix.stripprefix.prefixes=/api/v1
+        - traefik.http.routers.nest.tls.certresolver=letsencrypt
 
   # Monitoring services
   grafana:
@@ -72,6 +102,14 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - main-network
+    labels:
+        - traefik.enable=true
+        - traefik.http.services.grafana.loadbalancer.server.port=3000
+        - traefik.http.routers.grafana.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/manage/grafana`)
+        - traefik.http.routers.grafana.middlewares=grafana-stripprefix
+        - traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/manage/grafana
+        - traefik.http.routers.grafana.entrypoints=websecure
+        - traefik.http.routers.grafana.tls.certresolver=letsencrypt
   
   prometheus:
     image: prom/prometheus:latest
@@ -179,5 +217,6 @@ networks:
     driver: overlay
 
 volumes:
+  traefik-certificates:
   portainer_data:
   grafana_data:

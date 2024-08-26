@@ -62,9 +62,7 @@ services:
         - traefik.enable=true
         - traefik.http.services.portainer.loadbalancer.server.port=9000
         - traefik.http.routers.portainer.entrypoints=websecure
-        - traefik.http.routers.portainer.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/my-portainer`)
-        - traefik.http.routers.portainer.middlewares=portainer-stripprefix
-        - traefik.http.middlewares.portainer-stripprefix.stripprefix.prefixes=/my-portainer
+        - traefik.http.routers.portainer.rule=Host(`portainer.techeerzip.cloud`)
         - traefik.http.routers.portainer.tls.certresolver=letsencrypt
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -111,8 +109,6 @@ services:
         - traefik.http.routers.grafana.entrypoints=websecure
         - traefik.http.routers.grafana.tls.certresolver=letsencrypt
         - traefik.http.routers.grafana.rule=Host(`grafana.techeerzip.cloud`)
-        # - traefik.http.routers.grafana.middlewares=grafana-stripprefix
-        # - traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/my-grafana
     volumes:
       - grafana_data:/var/lib/grafana
     networks:

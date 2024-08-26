@@ -41,7 +41,7 @@ services:
           - node.labels.instance == main
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.mydashboard.rule=Host(`api.techeerzip.cloud`)"
+        - "traefik.http.routers.mydashboard.rule=Host(`traefik.techeerzip.cloud`)"
         - 'traefik.http.routers.mydashboard.entrypoints=websecure'
         - "traefik.http.routers.mydashboard.service=api@internal"
         - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
@@ -105,14 +105,14 @@ services:
       placement:
         constraints:
           - node.labels.instance == monitoring
-      # labels:
-      #   - traefik.enable=true
-      #   - traefik.http.services.grafana.loadbalancer.server.port=3000
-      #   - traefik.http.routers.grafana.entrypoints=websecure
-      #   - traefik.http.routers.grafana.tls.certresolver=letsencrypt
-      #   - traefik.http.routers.grafana.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/my-grafana`)
-      #   - traefik.http.routers.grafana.middlewares=grafana-stripprefix
-      #   - traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/my-grafana
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.grafana.loadbalancer.server.port=3000
+        - traefik.http.routers.grafana.entrypoints=websecure
+        - traefik.http.routers.grafana.tls.certresolver=letsencrypt
+        - traefik.http.routers.grafana.rule=Host(`grafana.techeerzip.cloud`)
+        # - traefik.http.routers.grafana.middlewares=grafana-stripprefix
+        # - traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/my-grafana
     volumes:
       - grafana_data:/var/lib/grafana
     networks:

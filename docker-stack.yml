@@ -196,6 +196,11 @@ services:
       - loki
     networks:
       - main-network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == main
   
   # 로그 저장
   loki:
@@ -206,6 +211,12 @@ services:
     command: -config.file=/etc/loki/config.yaml
     networks:
       - main-network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == monitoring
+    
 networks:
   main-network:
     driver: overlay

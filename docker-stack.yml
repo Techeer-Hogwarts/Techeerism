@@ -18,6 +18,12 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--log.level=INFO"
       - "--accesslog=true"
+      - "--accesslog.filepath=/var/log/traefik/access.log"
+      - "--accesslog.bufferingsize=100"
+      - "--accesslog.format=json"
+      - "--accesslog.fields.defaultmode=keep"
+      - "--accesslog.fields.headers.defaultmode=keep"
+      - "--accesslog.fields.headers.names.X-Forwarded-For=keep"
       - "--api.dashboard=true"
       - "--metrics.prometheus=true"
       - "--metrics.prometheus.buckets=0.100000, 0.300000, 1.200000, 5.000000"
@@ -40,6 +46,8 @@ services:
         constraints:
           - node.labels.instance == main
       labels:
+        - "logging=promtail"
+        - "logging_jobname=traefik"
         - "traefik.enable=true"
         - "traefik.http.routers.mydashboard.rule=Host(`traefik.techeerzip.cloud`)"
         - 'traefik.http.routers.mydashboard.entrypoints=websecure'
@@ -93,7 +101,7 @@ services:
         - traefik.http.middlewares.nest-stripprefix.stripprefix.prefixes=/api/v1
         - traefik.http.routers.nest.tls.certresolver=letsencrypt
 
-  # Monitoring services
+  # 모니터링 시각화
   grafana:
     image: grafana/grafana:latest
     ports:
@@ -114,7 +122,7 @@ services:
     networks:
       - main-network
 
-  
+  # 모니터링 메트릭 데이터 수집
   prometheus:
     image: prom/prometheus:latest
     ports:
@@ -134,7 +142,8 @@ services:
       placement:
         constraints:
           - node.labels.instance == main
-    
+  
+  # 컨터이너 메트릭 데이터 수집
   cadvisor:
     image: google/cadvisor:latest
     deploy:
@@ -152,6 +161,7 @@ services:
     networks:
       - main-network
   
+  # 호스트 메트릭 데이터 수집
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.8.1
     ports:
@@ -171,6 +181,31 @@ services:
     labels:
       - prometheus-job=node-exporter
 
+  # 로그 수집
+  promtail:
+    image:  grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - ./promtail/config.yaml:/etc/promtail/docker-config.yaml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - -config.file=/etc/promtail/docker-config.yaml
+      - -config.expand-env=true
+    depends_on:
+      - loki
+    networks:
+      - main-network
+  
+  # 로그 저장
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    # volumes:
+    #   - ./loki/config.yaml:/etc/loki/config.yaml
+    command: -config.file=/etc/loki/config.yaml
+    networks:
+      - main-network
 networks:
   main-network:
     driver: overlay

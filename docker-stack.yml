@@ -18,7 +18,7 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--log.level=INFO"
       - "--accesslog=true"
-      # - "--accesslog.filepath=/var/log/traefik/access.log"
+      - "--accesslog.filepath=/traefik/logs/access.log"
       - "--accesslog.bufferingsize=100"
       - "--accesslog.format=json"
       - "--accesslog.fields.defaultmode=keep"
@@ -38,6 +38,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "traefik-certificates:/letsencrypt"  
+      - "traefik_logs:/traefik/logs/"
     networks:
       - main-network
     deploy:
@@ -46,8 +47,6 @@ services:
         constraints:
           - node.labels.instance == main
       labels:
-        - "logging=promtail"
-        - "logging_jobname=traefik"
         - "traefik.enable=true"
         - "traefik.http.routers.mydashboard.rule=Host(`traefik.techeerzip.cloud`)"
         - 'traefik.http.routers.mydashboard.entrypoints=websecure'
@@ -184,11 +183,12 @@ services:
   # 로그 수집
   promtail:
     image:  grafana/promtail:latest
-    container_name: promtail
     volumes:
       - ./promtail/config.yaml:/etc/promtail/docker-config.yaml
+      - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
+      - traefik_logs:/traefik/logs/
     command:
       - -config.file=/etc/promtail/docker-config.yaml
       - -config.expand-env=true
@@ -205,7 +205,6 @@ services:
   # 로그 저장
   loki:
     image: grafana/loki:latest
-    container_name: loki
     # volumes:
     #   - ./loki/config.yaml:/etc/loki/config.yaml
     command: -config.file=/etc/loki/local-config.yaml
@@ -225,3 +224,4 @@ volumes:
   traefik-certificates:
   portainer_data:
   grafana_data:
+  traefik_logs:

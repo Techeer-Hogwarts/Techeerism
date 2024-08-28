@@ -40,8 +40,8 @@ services:
         published: 443
         protocol: tcp
         mode: host
-      - target: 8080
-        published: 8080
+      - target: 8090
+        published: 8090
         protocol: tcp
         mode: host
     volumes:

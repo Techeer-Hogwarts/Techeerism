@@ -1,6 +1,7 @@
 server:
   http_listen_port: 9080
   grpc_listen_port: 0
+  log_level: debug
 
 positions:
   filename: /tmp/positions.yaml
@@ -20,9 +21,13 @@ scrape_configs:
     pipeline_stages:
       - json:
           expressions:
-            output: ClientHost
-            client_ip: request_X-Real-Ip
-      # - geoip:
-      #     db: /etc/promtail/GeoLite2-City.mmdb
-      #     db_type: city
-      #     source: client_ip
+            client_ip: "\"request_X-Real-Ip\""
+      - geoip:
+          db: /etc/promtail/GeoLite2-City.mmdb
+          db_type: city
+          source: client_ip
+      - labels:
+          client_ip: client_ip
+          city_name: geoip_city_name
+          country_name: geoip_country_name
+          continent_name: geoip_continent_name

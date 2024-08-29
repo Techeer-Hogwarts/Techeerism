@@ -193,11 +193,12 @@ services:
   promtail:
     image:  grafana/promtail:latest
     volumes:
-      - ./promtail/config.yaml:/etc/promtail/docker-config.yaml
+      # - ./promtail/config.yaml:/etc/promtail/docker-config.yaml\
+      - ./promtail:/etc/promtail/
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./promtail/GeoLite2-City.mmdb:/etc/promtail/GeoLite2-City.mmdb
+      # - ./promtail/GeoLite2-City.mmdb:/etc/promtail/GeoLite2-City.mmdb
       - traefik_logs:/traefik/logs/
     command:
       - -config.file=/etc/promtail/docker-config.yaml

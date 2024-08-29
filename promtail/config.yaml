@@ -23,6 +23,6 @@ scrape_configs:
             client_ip: request_X_Real_Ip
       - geoip:
           db: /etc/promtail/GeoLite2-City.mmdb
-          type: city
+          db_type: city
           source: client_ip
           target: geoip_info

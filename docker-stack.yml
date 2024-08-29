@@ -201,7 +201,7 @@ services:
       # - ./promtail/GeoLite2-City.mmdb:/etc/promtail/GeoLite2-City.mmdb
       - traefik_logs:/traefik/logs/
     command:
-      - -config.file=/etc/promtail/docker-config.yaml
+      - -config.file=/etc/promtail/config.yaml
       - -config.expand-env=true
     depends_on:
       - loki

@@ -20,7 +20,7 @@ scrape_configs:
     pipeline_stages:
       - json:
           expressions:
-            client_ip: request_X_Real_Ip
+            client_ip: "request_X-Real-Ip"
       - geoip:
           db: /etc/promtail/GeoLite2-City.mmdb
           db_type: city

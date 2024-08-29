@@ -141,7 +141,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - /var/run/docker.sock:/var/run/docker.sock
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -197,6 +197,7 @@ services:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./promtail/GeoLite2-City.mmdb:/etc/promtail/GeoLite2-City.mmdb
       - traefik_logs:/traefik/logs/
     command:
       - -config.file=/etc/promtail/docker-config.yaml

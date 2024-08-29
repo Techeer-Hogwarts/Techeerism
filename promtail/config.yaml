@@ -16,3 +16,12 @@ scrape_configs:
         labels:
           job: traefik_file
           __path__: /traefik/logs/access.log
+
+    pipeline_stages:
+      - json:
+          expressions:
+            client_ip: request_X_Real_Ip
+      - geoip:
+          db: /etc/promtail/GeoLite2-City.mmdb
+          source: client_ip
+          target: geoip_info

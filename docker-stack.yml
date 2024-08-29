@@ -9,7 +9,7 @@ services:
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=techeerism_main-network"
-      - "--entrypoints.web.address=:80"
+      # - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entryPoints.web.http.redirections.entrypoint.scheme=https"
@@ -32,10 +32,10 @@ services:
       - "--entryPoints.metrics.address=:8091"
       - "--metrics.prometheus.entryPoint=metrics"
     ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-        mode: host
+      # - target: 80
+      #   published: 80
+      #   protocol: tcp
+      #   mode: host
       - target: 443
         published: 443
         protocol: tcp

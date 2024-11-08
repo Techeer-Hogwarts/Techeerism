@@ -1,0 +1,30 @@
+name: Deploy Crawler
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Version to deploy"
+        required: true
+      image_name:
+        description: "Name of the image to deploy"
+        required: true
+      replicas:
+        description: "Number of replicas"
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy the app
+        run: echo "Deploying the app..."
+      
+      - name: Echo inputs
+        run: echo "Image tag = ${{ github.event.inputs.image_tag }}"
+        run: echo "Image name = ${{ github.event.inputs.image_name }}"
+        run: echo "Replicas = ${{ github.event.inputs.replicas }}"

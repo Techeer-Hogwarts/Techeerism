@@ -25,6 +25,7 @@ jobs:
         run: echo "Deploying the app..."
       
       - name: Echo inputs
-        run: echo "Image tag = ${{ github.event.inputs.image_tag }}"
-        run: echo "Image name = ${{ github.event.inputs.image_name }}"
-        run: echo "Replicas = ${{ github.event.inputs.replicas }}"
+        run: |
+          echo "Image tag = ${{ github.event.inputs.image_tag }}"
+          echo "Image name = ${{ github.event.inputs.image_name }}"
+          echo "Replicas = ${{ github.event.inputs.replicas }}"

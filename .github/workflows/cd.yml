@@ -1,4 +1,4 @@
-name: Deploy Parser
+name: Deploy Stacks
 
 on:
   workflow_dispatch:

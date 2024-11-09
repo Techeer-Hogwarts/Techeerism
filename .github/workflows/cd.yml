@@ -40,15 +40,16 @@ jobs:
             exit 1
           fi
       
-      - name: Capture First Failure Details
+      - name: Capture Failure Details
         if: always()
         run: |
           if [ "${{ steps.test.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Test Step" >> $GITHUB_ENV
-          elif [ "${{ steps.step2.outcome }}" == "failure" ]; then
-            echo "FAILED_STEP=Step 2" >> $GITHUB_ENV
-          elif [ "${{ steps.step3.outcome }}" == "failure" ]; then
-            echo "FAILED_STEP=Step 3" >> $GITHUB_ENV
+            echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
+          # elif [ "${{ steps.step2.outcome }}" == "failure" ]; then
+          #   echo "FAILED_STEP=Step 2" >> $GITHUB_ENV
+          # elif [ "${{ steps.step3.outcome }}" == "failure" ]; then
+          #   echo "FAILED_STEP=Step 3" >> $GITHUB_ENV
           fi
       
       - name: Final Message To Slack
@@ -58,7 +59,12 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          $FAILED_LOGS = $(cat log_file.txt)
+          if [ -f log_file.txt ]; then
+            FAILED_LOGS=$(cat log_file.txt)
+          else
+            FAILED_LOGS="No logs available"
+          fi
+          
           if [ "$FAILED_STEP" != "" ]; then
             echo "The step '$FAILED_STEP' failed."
             curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \

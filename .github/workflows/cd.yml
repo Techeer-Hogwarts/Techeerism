@@ -34,12 +34,11 @@ jobs:
         id: test
         run: |
           LOG_FILE="log_file.txt"
-          if [ ${{ github.event.inputs.replicas }} != "3" ]; then
-            echo "Test Step succeeded" | tee -a $LOG_FILE
-          else
+          if [ ${{ github.event.inputs.replicas }} == "3" ]; then
             echo "Test Step failed. 테스트중" | tee -a $LOG_FILE
             exit 1
           fi
+          echo "Test Step succeeded."
       
       - name: Capture Failure Details
         if: always()

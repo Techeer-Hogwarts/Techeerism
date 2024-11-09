@@ -34,9 +34,9 @@ jobs:
         id: test
         run: |
           if [ ${{ github.event.inputs.replicas }} != "3" ]; then
-            echo "Test Step succeeded"
+            echo "Test Step succeeded" >> log_file.txt
           else
-            echo "Test Step failed. 테스트중"
+            echo "Test Step failed. 테스트중" >> log_file.txt
             exit 1
           fi
       
@@ -45,13 +45,10 @@ jobs:
         run: |
           if [ "${{ steps.test.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Test Step" >> $GITHUB_ENV
-            echo "FAILED_LOGS=${{ steps.step1.outcome }}" >> $GITHUB_ENV
           elif [ "${{ steps.step2.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Step 2" >> $GITHUB_ENV
-            echo "FAILED_LOGS=${{ steps.step2.outcome }}" >> $GITHUB_ENV
           elif [ "${{ steps.step3.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Step 3" >> $GITHUB_ENV
-            echo "FAILED_LOGS=${{ steps.step3.outcome }}" >> $GITHUB_ENV
           fi
       
       - name: Final Message To Slack
@@ -61,6 +58,7 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
+          $FAILED_LOGS = $(cat log_file.txt)
           if [ "$FAILED_STEP" != "" ]; then
             echo "The step '$FAILED_STEP' failed."
             curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \

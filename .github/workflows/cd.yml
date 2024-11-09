@@ -29,3 +29,61 @@ jobs:
           echo "Image tag = ${{ github.event.inputs.image_tag }}"
           echo "Image name = ${{ github.event.inputs.image_name }}"
           echo "Replicas = ${{ github.event.inputs.replicas }}"
+      
+      - name: Test Success and Failures
+        id: test
+        run: |
+          if [ ${{ github.event.inputs.replicas }} != "3" ]; then
+            echo "Test Step succeeded"
+          else
+            echo "Test Step failed. 테스트중"
+            exit 1
+          fi
+      
+      - name: Capture First Failure Details
+        if: always()
+        run: |
+          if [ "${{ steps.test.outcome }}" == "failure" ]; then
+            echo "FAILED_STEP=Test Step" >> $GITHUB_ENV
+            echo "FAILED_LOGS=${{ steps.step1.outcome }}" >> $GITHUB_ENV
+          elif [ "${{ steps.step2.outcome }}" == "failure" ]; then
+            echo "FAILED_STEP=Step 2" >> $GITHUB_ENV
+            echo "FAILED_LOGS=${{ steps.step2.outcome }}" >> $GITHUB_ENV
+          elif [ "${{ steps.step3.outcome }}" == "failure" ]; then
+            echo "FAILED_STEP=Step 3" >> $GITHUB_ENV
+            echo "FAILED_LOGS=${{ steps.step3.outcome }}" >> $GITHUB_ENV
+          fi
+      
+      - name: Final Message To Slack
+        if: always()
+        env:
+          IMAGE_NAME: ${{ github.event.inputs.image_name }}
+          DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+          SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
+        run: |
+          if [ "$FAILED_STEP" != "" ]; then
+            echo "The step '$FAILED_STEP' failed."
+            curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \
+                  -H "Content-Type: application/json" \
+                  -d '{
+                        "status": "failed",
+                        "imageName": "'"$IMAGE_NAME"'",
+                        "imageTag": "'"$DOCKER_IMAGE_TAG"'",
+                        "failedStep": "'"$FAILED_STEP"'",
+                        "logs": "'"$FAILED_LOGS"'",
+                        "secret": "'"$SLACK_SECRET"'"
+                        "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
+                      }'
+          else
+            echo "All steps succeeded!"
+            curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \
+                  -H "Content-Type: application/json" \
+                  -d '{
+                        "status": "success",
+                        "imageName": "'"$IMAGE_NAME"'",
+                        "imageTag": "'"$DOCKER_IMAGE_TAG"'",
+                        "failedStep": "'"$FAILED_STEP"'",
+                        "logs": "'"$FAILED_LOGS"'",
+                        "secret": "'"$SLACK_SECRET"'"
+                        "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
+                      }'

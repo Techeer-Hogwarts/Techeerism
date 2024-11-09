@@ -33,10 +33,11 @@ jobs:
       - name: Test Success and Failures
         id: test
         run: |
+          LOG_FILE="log_file.txt"
           if [ ${{ github.event.inputs.replicas }} != "3" ]; then
-            echo "Test Step succeeded" >> log_file.txt
+            echo "Test Step succeeded" | tee -a $LOG_FILE
           else
-            echo "Test Step failed. 테스트중" >> log_file.txt
+            echo "Test Step failed. 테스트중" | tee -a $LOG_FILE
             exit 1
           fi
       
@@ -64,7 +65,7 @@ jobs:
           else
             FAILED_LOGS="No logs available"
           fi
-          
+
           if [ "$FAILED_STEP" != "" ]; then
             echo "The step '$FAILED_STEP' failed."
             curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \

@@ -71,7 +71,7 @@ jobs:
                         "imageTag": "'"$DOCKER_IMAGE_TAG"'",
                         "failedStep": "'"$FAILED_STEP"'",
                         "logs": "'"$FAILED_LOGS"'",
-                        "secret": "'"$SLACK_SECRET"'"
+                        "secret": "'"$SLACK_SECRET"'",
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'
           else
@@ -84,7 +84,7 @@ jobs:
                         "imageTag": "'"$DOCKER_IMAGE_TAG"'",
                         "failedStep": "'"$FAILED_STEP"'",
                         "logs": "'"$FAILED_LOGS"'",
-                        "secret": "'"$SLACK_SECRET"'"
+                        "secret": "'"$SLACK_SECRET"'",
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'
           fi

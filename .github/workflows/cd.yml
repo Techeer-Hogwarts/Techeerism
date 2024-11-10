@@ -34,9 +34,9 @@ jobs:
         id: copy
         uses: appleboy/scp-action@v0.1.7
         with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PASSWORD }}
         source: nest-stack.yml, parser-stack.yml, crawler-stack.yml
         target: /home/ubuntu/
       

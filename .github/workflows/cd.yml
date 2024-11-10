@@ -37,7 +37,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
-          source: nest-stack.yml, parser-stack.yml, crawler-stack.yml, scale-nest.sh, scale-parser.sh, scale-crawler.sh
+          source: nest-stack.yml, parser-stack.yml, crawler-stack.yml, scale_nest.sh, scale_parser.sh, scale_crawler.sh
           target: /home/ubuntu/
       
       - name: Deploy to Server
@@ -95,16 +95,16 @@ jobs:
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
               ls
               echo "Scaling Down Nest" | tee -a $LOG_FILE
-              chmod +x scale-nest.sh
-              /home/ubuntu/scale-nest.sh | tee -a $LOG_FILE
+              chmod +x /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
+              /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
               echo "Scaling Down Parser" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale-parser.sh
-              /home/ubuntu/scale-parser.sh | tee -a $LOG_FILE
+              chmod +x /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
+              /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
               echo "Scaling Down Crawler" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale-crawler.sh
-              /home/ubuntu/scale-crawler.sh | tee -a $LOG_FILE
+              chmod +x /home/ubuntu/scale_crawler.sh | tee -a $LOG_FILE
+              /home/ubuntu/scale_crawler.sh | tee -a $LOG_FILE
             else
               echo "Invalid image name"
               exit 1

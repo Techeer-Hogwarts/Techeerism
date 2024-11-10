@@ -177,6 +177,11 @@ services:
     networks:
       - main-network
     tty: true
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == main
 
   redis:
     image: "redis:alpine"
@@ -185,6 +190,11 @@ services:
     networks:
       - main-network
     tty: true
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == main
     
 networks:
   main-network:

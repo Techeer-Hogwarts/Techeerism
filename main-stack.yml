@@ -6,7 +6,7 @@ services:
       - "--providers.docker=true" 
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=techeerzip_main-network"
+      - "--providers.docker.network=main-network"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entryPoints.web.http.redirections.entrypoint.scheme=https"

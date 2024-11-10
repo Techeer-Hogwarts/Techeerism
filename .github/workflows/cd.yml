@@ -120,21 +120,21 @@ jobs:
             echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
             echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
           fi
-      # - name: Clean Up Files in Server
-      #   if: always()
-      #   uses: appleboy/ssh-action@v1.1.0
-      #   with:
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USERNAME }}
-      #     key: ${{ secrets.SSH_PASSWORD }}
-      #     script: |
-      #       rm -f /home/ubuntu/nest-stack.yml
-      #       rm -f /home/ubuntu/parser-stack.yml
-      #       rm -f /home/ubuntu/crawler-stack.yml
-      #       rm -f /home/ubuntu/scale-nest.sh
-      #       rm -f /home/ubuntu/scale-parser.sh
-      #       rm -f /home/ubuntu/scale-crawler.sh
-      #       rm -f /home/ubuntu/log_file.txt
+      - name: Clean Up Files in Server
+        if: always()
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            rm -f /home/ubuntu/nest-stack.yml
+            rm -f /home/ubuntu/parser-stack.yml
+            rm -f /home/ubuntu/crawler-stack.yml
+            rm -f /home/ubuntu/scale-nest.sh
+            rm -f /home/ubuntu/scale-parser.sh
+            rm -f /home/ubuntu/scale-crawler.sh
+            rm -f /home/ubuntu/log_file.txt
 
       - name: Final Message To Slack
         if: always()

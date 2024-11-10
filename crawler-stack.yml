@@ -1,0 +1,21 @@
+servcices:
+  crawler:
+    image: suhach0523/techeerism-crawler:$IMAGE_TAG
+    networks:
+      - main-network
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - RABBITMQ_USER=$RABBITMQ_USER
+      - RABBITMQ_PASS=$RABBITMQ_PASSWORD
+      - RABBITMQ_HOST=$RABBITMQ_HOST
+    tty: true
+    deploy:
+      replicas: $SERVICE_REPLICAS
+      placement:
+        constraints:
+          - node.labels.instance == parser
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure

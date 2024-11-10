@@ -131,9 +131,9 @@ jobs:
             rm -f /home/ubuntu/nest-stack.yml
             rm -f /home/ubuntu/parser-stack.yml
             rm -f /home/ubuntu/crawler-stack.yml
-            rm -f /home/ubuntu/scale-nest.sh
-            rm -f /home/ubuntu/scale-parser.sh
-            rm -f /home/ubuntu/scale-crawler.sh
+            rm -f /home/ubuntu/scale_nest.sh
+            rm -f /home/ubuntu/scale_parser.sh
+            rm -f /home/ubuntu/scale_crawler.sh
             rm -f /home/ubuntu/log_file.txt
 
       - name: Final Message To Slack

@@ -63,6 +63,8 @@ jobs:
             export RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
             export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
             export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
+            export SWAGGER_USER=${{ secrets.SWAGGER_USER }}
+            export SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
 
             if [ "$SERVICE_REPLICAS" == "1" ]; then
               export SERVICE_REPLICAS="2"

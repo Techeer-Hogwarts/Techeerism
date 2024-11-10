@@ -37,7 +37,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
-          source: nest-stack.yml, parser-stack.yml, crawler-stack.yml
+          source: nest-stack.yml, parser-stack.yml, crawler-stack.yml, scale-nest.sh, scale-parser.sh, scale-crawler.sh
           target: /home/ubuntu/
       
       - name: Deploy to Server
@@ -77,7 +77,33 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
-
+      - name: Scale Down if Needed
+        if: ${{ github.event.inputs.replicas }} < 2
+        id: scale_down
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            LOG_FILE="log_file.txt"
+            export IMAGE_NAME=${{ github.event.inputs.image_name }}
+            if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
+              echo "Scaling Down Nest" | tee -a $LOG_FILE
+              chmod +x /home/ubuntu/scale-nest.sh
+              /home/ubuntu/scale-nest.sh | tee -a $LOG_FILE
+            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
+              echo "Scaling Down Parser" | tee -a $LOG_FILE
+              chmod +x /home/ubuntu/scale-parser.sh
+              /home/ubuntu/scale-parser.sh | tee -a $LOG_FILE
+            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
+              echo "Scaling Down Crawler" | tee -a $LOG_FILE
+              chmod +x /home/ubuntu/scale-crawler.sh
+              /home/ubuntu/scale-crawler.sh | tee -a $LOG_FILE
+            else
+              echo "Invalid image name"
+              exit 1
+            fi
       
       - name: Capture Failure Details
         if: always()
@@ -85,8 +111,26 @@ jobs:
           if [ "${{ steps.deploy.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
             echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
+          elif [ "${{ steps.copy.outcome }}" == "failure" ]; then
+            echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
+            echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
           fi
-      
+      - name: Clean Up Files in Server
+        if: always()
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            rm -f /home/ubuntu/nest-stack.yml
+            rm -f /home/ubuntu/parser-stack.yml
+            rm -f /home/ubuntu/crawler-stack.yml
+            rm -f /home/ubuntu/scale-nest.sh
+            rm -f /home/ubuntu/scale-parser.sh
+            rm -f /home/ubuntu/scale-crawler.sh
+            rm -f /home/ubuntu/log_file.txt
+
       - name: Final Message To Slack
         if: always()
         env:

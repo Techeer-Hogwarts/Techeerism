@@ -1,4 +1,4 @@
-servcices:
+services:
   crawler:
     image: suhach0523/techeerism-crawler:$IMAGE_TAG
     networks:

@@ -1,4 +1,4 @@
-servcices:
+services:
   parser:
     image: suhach0523/techeerism-parser:$IMAGE_TAG
     networks:

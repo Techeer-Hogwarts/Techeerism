@@ -17,7 +17,7 @@ scrape_configs:
         action: keep
       # Only keep containers that are in main-network.
       - source_labels: [__meta_dockerswarm_network_name]
-        regex: techeerism_main-network
+        regex: main-network
         action: keep
       # Use the prometheus-job Swarm label as Prometheus job label.
       - source_labels: [__meta_dockerswarm_container_label_prometheus_job]

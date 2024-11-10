@@ -3,6 +3,18 @@ services:
     image: suhach0523/techeerism-nest:$IMAGE_TAG
     networks:
       - main-network
+    environment:
+      - DATABASE_URL=$DATABASE_URL
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_PASSWORD=$REDIS_PASSWORD
+      - EMAIL_USER=$EMAIL_USER
+      - EMAIL_PASS=$EMAIL_PASS
+      - JWT_SECRET=$JWT_SECRET
+      - SLACK=$SLACK_SECRET
+      - RABBITMQ_HOST=$RABBITMQ_HOST
+      - RABBITMQ_DEFAULT_USER=$RABBITMQ_DEFAULT_USER
+      - RABBITMQ_DEFAULT_PASS=$RABBITMQ_DEFAULT_PASS
     deploy:
       replicas: $SERVICE_REPLICAS
       placement:

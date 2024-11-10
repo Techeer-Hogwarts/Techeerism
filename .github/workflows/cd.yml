@@ -30,21 +30,22 @@ jobs:
           echo "Image name = ${{ github.event.inputs.image_name }}"
           echo "Replicas = ${{ github.event.inputs.replicas }}"
       
-      - name: Test Success and Failures
-        id: test
-        run: |
-          LOG_FILE="log_file.txt"
-          if [ ${{ github.event.inputs.replicas }} == "3" ]; then
-            echo "Test Step failed. 테스트중" | tee -a $LOG_FILE
-            exit 1
-          fi
-          echo "Test Step succeeded."
+      - name: Deploy to Server
+        id: deploy
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            whoami
+            docker ps | tee -a $LOG_FILE
       
       - name: Capture Failure Details
         if: always()
         run: |
-          if [ "${{ steps.test.outcome }}" == "failure" ]; then
-            echo "FAILED_STEP=Test Step" >> $GITHUB_ENV
+          if [ "${{ steps.deploy.outcome }}" == "failure" ]; then
+            echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
             echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
           # elif [ "${{ steps.step2.outcome }}" == "failure" ]; then
           #   echo "FAILED_STEP=Step 2" >> $GITHUB_ENV

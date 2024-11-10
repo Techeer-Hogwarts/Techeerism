@@ -56,7 +56,7 @@ services:
         - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
         - "traefik.http.services.mydashboard.loadbalancer.server.port=8090"
         - "traefik.http.routers.mydashboard.middlewares=auth"
-        - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
+        - "traefik.http.middlewares.auth.basicauth.users=admin:$$2y$$05$$bUgU2v17XK70G8FLKbx7Fep.e5azXBXlobcHFJW9veU/jaMIkaaSa"
 
   portainer:
     image: portainer/portainer-ce:latest

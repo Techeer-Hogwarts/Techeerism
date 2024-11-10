@@ -64,6 +64,10 @@ jobs:
             export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
             export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
 
+            if [ "$SERVICE_REPLICAS" == "1" ]; then
+              export $SERVICE_REPLICAS=2
+            fi
+
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
               echo "Deploying Nest Stack..." | tee -a $LOG_FILE
               docker stack deploy -c nest-stack.yml techeerzip --detach=true | tee -a $LOG_FILE

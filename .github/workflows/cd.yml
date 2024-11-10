@@ -38,8 +38,37 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           script: |
-            whoami
-            docker ps | tee -a $LOG_FILE
+            LOG_FILE="log_file.txt"
+            export IMAGE_TAG=${{ github.event.inputs.image_tag }}
+            export SERVICE_REPLICAS=${{ github.event.inputs.replicas }}
+            export IMAGE_NAME=${{ github.event.inputs.image_name }}
+            export DATABASE_URL=${{ secrets.DATABASE_URL }}
+            export REDIS_HOST=${{ secrets.REDIS_HOST }}
+            export REDIS_PORT=${{ secrets.REDIS_PORT }}
+            export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+            export EMAIL_USER=${{ secrets.EMAIL_USER }}
+            export EMAIL_PASS=${{ secrets.EMAIL_PASS }}
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export SLACK_SECRET=${{ secrets.SLACK_DEPLOY_SECRET }}
+            export RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
+            export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
+            export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
+
+            if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
+              echo "Deploying Nest Stack..." | tee -a $LOG_FILE
+              cp $GITHUB_WORKSPACE/nest-stack.yml home/ubuntu/nest-stack.yml
+              # docker stack deploy -c nest-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
+            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
+              echo "Deploying Parser..." | tee -a $LOG_FILE
+              # docker stack deploy -c parser-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
+            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
+              echo "Deploying Crawler..." | tee -a $LOG_FILE
+              # docker stack deploy -c crawler-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
+            else
+              echo "Invalid image name"
+              exit 1
+            fi
+
       
       - name: Capture Failure Details
         if: always()
@@ -47,10 +76,6 @@ jobs:
           if [ "${{ steps.deploy.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
             echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
-          # elif [ "${{ steps.step2.outcome }}" == "failure" ]; then
-          #   echo "FAILED_STEP=Step 2" >> $GITHUB_ENV
-          # elif [ "${{ steps.step3.outcome }}" == "failure" ]; then
-          #   echo "FAILED_STEP=Step 3" >> $GITHUB_ENV
           fi
       
       - name: Final Message To Slack

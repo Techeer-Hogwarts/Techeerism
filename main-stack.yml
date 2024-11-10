@@ -1,4 +1,5 @@
 services:
+  # 로드밸런싱 및 리버스 프록시 & HTTPS 설정
   traefik:
     image: traefik:v2.9
     command:
@@ -58,6 +59,7 @@ services:
         - "traefik.http.routers.mydashboard.middlewares=auth"
         - "traefik.http.middlewares.auth.basicauth.users=admin:$$2y$$05$$bUgU2v17XK70G8FLKbx7Fep.e5azXBXlobcHFJW9veU/jaMIkaaSa"
 
+  # 전체 관리자 페이지
   portainer:
     image: portainer/portainer-ce:latest
     ports:
@@ -161,6 +163,24 @@ services:
       placement:
         constraints:
           - node.labels.instance == main
+  
+  # 레디스 & 레빗MQ
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15692:15692"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    tty: true
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    tty: true
     
 networks:
   main-network:

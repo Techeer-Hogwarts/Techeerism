@@ -5,20 +5,30 @@ services:
       - main-network
     environment:
       - REDIS_HOST=$REDIS_HOST
-      - RABBITMQ_USER=$RABBITMQ_USER
-      - RABBITMQ_PASS=$RABBITMQ_PASSWORD
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_PASSWORD=$REDIS_PASSWORD
+      - RABBITMQ_USER=$RABBITMQ_DEFAULT_USER
+      - RABBITMQ_PASS=$RABBITMQ_DEFAULT_PASS
       - RABBITMQ_HOST=$RABBITMQ_HOST
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
       placement:
         constraints:
-          - node.labels.instance == parser
+          - node.labels.instance == crawler
       update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 60s
+      rollback_config:
         parallelism: 1
         delay: 10s
       restart_policy:
         condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 1m
 
 networks:
   main-network:

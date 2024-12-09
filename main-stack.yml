@@ -93,6 +93,9 @@ services:
       - main-network
     deploy:
       mode: global
+      placement:
+        constraints:
+          - node.platform.os == linux
 
   # 모니터링 메트릭 데이터 수집
   prometheus:

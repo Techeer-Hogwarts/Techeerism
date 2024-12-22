@@ -65,6 +65,10 @@ jobs:
             export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
             export SWAGGER_USER=${{ secrets.SWAGGER_USER }}
             export SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
+            export AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }}
+            export AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
+            export AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+            export AWS_REGION=${{ secrets.AWS_REGION }}
 
             if [ "$SERVICE_REPLICAS" == "1" ]; then
               export SERVICE_REPLICAS="2"

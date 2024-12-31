@@ -1,0 +1,19 @@
+services:
+  search:
+    image: suhach0523/techeerism-search
+    networks:
+      - main-network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == home-server
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+networks:
+  main-network:
+    external: true

@@ -15,7 +15,7 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
-      abels:
+      labels:
         - traefik.enable=true
         - traefik.http.services.search.loadbalancer.server.port=8085
         - traefik.http.routers.search.entrypoints=websecure

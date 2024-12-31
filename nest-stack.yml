@@ -26,7 +26,7 @@ services:
       replicas: $SERVICE_REPLICAS
       placement:
         constraints:
-          - node.labels.instance == home-server
+          - node.labels.instance == main
       update_config:
         parallelism: 1
         delay: 10s

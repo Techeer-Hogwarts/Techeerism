@@ -1,6 +1,5 @@
 http:
   routers:
-    # Traefik Dashboard
     mydashboard:
       rule: "Host(`traefik.techeerzip.cloud`)"
       service: "api@internal"
@@ -20,4 +19,4 @@ http:
     external-api:
       loadBalancer:
         servers:
-          - url: "${HOME_SERVER_URL}" # External API backend
+          - url: http://100.116.150.4:8085 # External API backend

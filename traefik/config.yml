@@ -1,12 +1,12 @@
 http:
   routers:
-    mydashboard:
-      rule: "Host(`traefik.techeerzip.cloud`)"
-      service: "api@internal"
-      entryPoints:
-        - "websecure"
-      tls:
-        certResolver: "letsencrypt"
+    # mydashboard:
+    #   rule: "Host(`traefik.techeerzip.cloud`)"
+    #   service: "api@internal"
+    #   entryPoints:
+    #     - "websecure"
+    #   tls:
+    #     certResolver: "letsencrypt"
 
     # External API
     external-api:
@@ -14,6 +14,8 @@ http:
       service: "external-api"
       entryPoints:
         - "websecure"
+      tls:
+        certResolver: "letsencrypt"
 
   services:
     external-api:

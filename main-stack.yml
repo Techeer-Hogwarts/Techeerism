@@ -123,8 +123,8 @@ services:
   cadvisor:
     image: google/cadvisor:latest
     deploy:
+      mode: global
       placement:
-        replicas: 4
         constraints:
           - node.labels.instance != home-server
     labels:

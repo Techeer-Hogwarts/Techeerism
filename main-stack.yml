@@ -125,7 +125,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.platform.os == linux
+          - node.labels.instance != home-server
     labels:
       - prometheus-job=cadvisor
     ports:

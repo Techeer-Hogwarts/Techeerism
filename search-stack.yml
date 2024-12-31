@@ -1,6 +1,6 @@
 services:
   search:
-    image: suhach0523/techeerism-search
+    image: suhach0523/techeerism-search:1.1.
     networks:
       - main-network
     ports:

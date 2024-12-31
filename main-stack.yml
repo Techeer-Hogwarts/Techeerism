@@ -40,7 +40,7 @@ services:
         mode: host
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - ./traefik/config.yml:/config.yml:ro
+      - ./traefik/config.yml:/traefik.yml:ro
       - "traefik-certificates:/letsencrypt"  
       - "traefik_logs:/traefik/logs/"
     environment:

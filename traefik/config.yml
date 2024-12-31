@@ -15,7 +15,8 @@ http:
       entryPoints:
         - "websecure"
       tls:
-        certResolver: "letsencrypt"
+        domains:
+          - main: "external.techeerzip.cloud"
 
   services:
     external-api:

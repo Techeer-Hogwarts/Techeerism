@@ -3,6 +3,8 @@ services:
     image: suhach0523/techeerism-search
     networks:
       - main-network
+    ports:
+      - "8085:8085"
     deploy:
       replicas: 1
       placement:
@@ -13,6 +15,14 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+      abels:
+        - traefik.enable=true
+        - traefik.http.services.search.loadbalancer.server.port=8085
+        - traefik.http.routers.search.entrypoints=websecure
+        - traefik.http.routers.search.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v2`)
+        # - traefik.http.routers.search.middlewares=search-stripprefix
+        # - traefik.http.middlewares.search-stripprefix.stripprefix.prefixes=/api/v1
+        - traefik.http.routers.search.tls.certresolver=letsencrypt
 
 networks:
   main-network:

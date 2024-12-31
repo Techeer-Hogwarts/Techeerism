@@ -8,6 +8,9 @@ services:
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=main-network"
+      - "--providers.docker.watch=true"
+      - "--providers.file.filename=/dynamic-config.yml"
+      - "--providers.file.watch=true"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entryPoints.web.http.redirections.entrypoint.scheme=https"
@@ -40,7 +43,7 @@ services:
         mode: host
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - ./traefik/config.yml:/traefik.yml:ro
+      - ./traefik/config.yml:/dynamic-config.yml:ro
       - "traefik-certificates:/letsencrypt"  
       - "traefik_logs:/traefik/logs/"
     environment:

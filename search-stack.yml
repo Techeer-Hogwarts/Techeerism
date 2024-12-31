@@ -1,29 +1,29 @@
 services:
   search:
     image: suhach0523/techeerism-search:1.1.
-    networks:
-      - main-network
+    # networks:
+    #   - main-network
     ports:
       - "8085:8085"
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.instance == home-server
-      update_config:
-        parallelism: 1
-        delay: 10s
-      restart_policy:
-        condition: on-failure
-      labels:
-        - traefik.enable=true
-        - traefik.http.services.search.loadbalancer.server.port=8085
-        - traefik.http.routers.search.entrypoints=websecure
-        - traefik.http.routers.search.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v2`)
-        # - traefik.http.routers.search.middlewares=search-stripprefix
-        # - traefik.http.middlewares.search-stripprefix.stripprefix.prefixes=/api/v1
-        - traefik.http.routers.search.tls.certresolver=letsencrypt
+    # deploy:
+    #   replicas: 1
+    #   placement:
+    #     constraints:
+    #       - node.labels.instance == home-server
+    #   update_config:
+    #     parallelism: 1
+    #     delay: 10s
+    #   restart_policy:
+    #     condition: on-failure
+    #   labels:
+    #     - traefik.enable=true
+    #     - traefik.http.services.search.loadbalancer.server.port=8085
+    #     - traefik.http.routers.search.entrypoints=websecure
+    #     - traefik.http.routers.search.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v2`)
+    #     # - traefik.http.routers.search.middlewares=search-stripprefix
+    #     # - traefik.http.middlewares.search-stripprefix.stripprefix.prefixes=/api/v1
+    #     - traefik.http.routers.search.tls.certresolver=letsencrypt
 
-networks:
-  main-network:
-    external: true
+# networks:
+#   main-network:
+#     external: true

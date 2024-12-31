@@ -40,8 +40,11 @@ services:
         mode: host
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - ./traefik/dynamic-config.yml:/etc/traefik/dynamic-config.yml:ro
       - "traefik-certificates:/letsencrypt"  
       - "traefik_logs:/traefik/logs/"
+    environment:
+      - HOME_SERVER_URL=http://100.116.150.4:8085
     networks:
       - main-network
     deploy:
@@ -56,6 +59,8 @@ services:
         - "traefik.http.routers.mydashboard.service=api@internal"
         - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
         - "traefik.http.services.mydashboard.loadbalancer.server.port=8090"
+        - "traefik.http.routers.external-api.rule=Host(`external.techeerzip.cloud`)"
+        - "traefik.http.services.external-api.loadbalancer.server.url=${HOME_SERVER_URL}"
         # - "traefik.http.routers.mydashboard.middlewares=auth"
         # - "traefik.http.middlewares.auth.basicauth.users=admin:$$2y$$05$$bUgU2v17XK70G8FLKbx7Fep.e5azXBXlobcHFJW9veU/jaMIkaaSa"
 

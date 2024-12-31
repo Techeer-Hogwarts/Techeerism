@@ -222,10 +222,6 @@ networks:
   main-network:
     driver: overlay
     external: true
-    attachable: true
-    ipam:
-      config:
-        - subnet: "10.0.0.0/24"
 
 volumes:
   traefik-certificates:

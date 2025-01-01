@@ -21,4 +21,4 @@ http:
     external-api:
       loadBalancer:
         servers:
-          - url: $HOME_SERVER_URL
+          - url: "${HOME_SERVER_URL}"

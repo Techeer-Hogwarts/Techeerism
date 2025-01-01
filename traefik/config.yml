@@ -21,4 +21,4 @@ http:
     external-api:
       loadBalancer:
         servers:
-          - url: http://100.116.150.4:8085 # External API backend
+          - url: $HOME_SERVER_URL

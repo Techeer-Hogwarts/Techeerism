@@ -17,7 +17,7 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.email=whysano517@gmail.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--log.level=DEBUG"
+      - "--log.level=INFO"
       - "--accesslog=true"
       - "--accesslog.filepath=/traefik/logs/access.log"
       - "--accesslog.bufferingsize=100"
@@ -47,7 +47,7 @@ services:
       - "traefik-certificates:/letsencrypt"  
       - "traefik_logs:/traefik/logs/"
     environment:
-      - HOME_SERVER_URL=http://100.116.150.4:8085
+      - HOME_SERVER_URL=$HOME_SERVER_URL
     networks:
       - main-network
     deploy:

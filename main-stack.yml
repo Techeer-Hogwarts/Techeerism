@@ -215,8 +215,8 @@ services:
       - "6379:6379"
     networks:
       - main-network
-    environment:
-      - REDIS_PASSWORD=$REDIS_PASSWORD
+    # environment:
+    #   - REDIS_PASSWORD=$REDIS_PASSWORD
     tty: true
     deploy:
       replicas: 1

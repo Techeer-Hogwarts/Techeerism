@@ -130,9 +130,6 @@ services:
     image: google/cadvisor:latest
     deploy:
       mode: global
-      placement:
-        constraints:
-          - node.labels.instance != home-server
     labels:
       - prometheus-job=cadvisor
     ports:

@@ -31,6 +31,7 @@ services:
       - GOOGLE_AUTH_CLIENT_ID=$GOOGLE_AUTH_CLIENT_ID
       - GOOGLE_FOLDER_ID=$GOOGLE_FOLDER_ID
       - ARCHIVE_FOLDER_ID=$ARCHIVE_FOLDER_ID
+      - RABBITMQ_URL=$RABBITMQ_URL
     deploy:
       replicas: $SERVICE_REPLICAS
       placement:

@@ -70,6 +70,15 @@ jobs:
             export AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
             export AWS_REGION=${{ secrets.AWS_REGION }}
             export REDIS_URL=${{ secrets.REDIS_URL }}
+            export RABBITMQ_URL=${{ secrets.RABBITMQ_URL }}
+            export GOOGLE_AUTH_TYPE=${{ secrets.GOOGLE_AUTH_TYPE }}
+            export GOOGLE_AUTH_PROJECT_ID=${{ secrets.GOOGLE_AUTH_PROJECT_ID }}
+            export GOOGLE_AUTH_PRIVATE_KEY_ID=${{ secrets.GOOGLE_AUTH_PRIVATE_KEY_ID }}
+            export GOOGLE_AUTH_PRIVATE_KEY=${{ secrets.GOOGLE_AUTH_PRIVATE_KEY }}
+            export GOOGLE_AUTH_CLIENT_EMAIL=${{ secrets.GOOGLE_AUTH_CLIENT_EMAIL }}
+            export GOOGLE_AUTH_CLIENT_ID=${{ secrets.GOOGLE_AUTH_CLIENT_ID }}
+            export GOOGLE_FOLDER_ID=${{ secrets.GOOGLE_FOLDER_ID }}
+            export ARCHIVE_FOLDER_ID=${{ secrets.ARCHIVE_FOLDER_ID }}
 
             if [ "$SERVICE_REPLICAS" == "1" ]; then
               export SERVICE_REPLICAS="2"

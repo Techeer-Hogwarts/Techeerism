@@ -12,6 +12,9 @@ on:
       replicas:
         description: "Number of replicas"
         required: true
+      environment:
+        description: "Environment to deploy"
+        required: true
 
 jobs:
   deploy:
@@ -48,6 +51,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           script: |
+            set -e
             LOG_FILE="log_file.txt"
             export IMAGE_TAG=${{ github.event.inputs.image_tag }}
             export SERVICE_REPLICAS=${{ github.event.inputs.replicas }}
@@ -106,6 +110,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           script: |
+            set -e
             LOG_FILE="log_file.txt"
             export IMAGE_NAME=${{ github.event.inputs.image_name }}
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then

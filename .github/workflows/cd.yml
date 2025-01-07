@@ -147,6 +147,15 @@ jobs:
           elif [ "${{ steps.scale_down.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
             echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
+          elif echo "${{ steps.deploy.outputs.stdout }}" | grep -q "context canceled"; then
+            echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
+            echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
+          elif echo "${{ steps.copy.outputs.stdout }}" | grep -q "context canceled"; then
+            echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
+            echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
+          elif echo "${{ steps.scale_down.outputs.stdout }}" | grep -q "context canceled"; then
+            echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
+            echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
           fi
       - name: Clean Up Files in Server
         if: always()

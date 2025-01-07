@@ -113,6 +113,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           capture_stdout: 'true'
+          capture_stderr: 'true'
           script: |
             set -e
             LOG_FILE="log_file.txt"

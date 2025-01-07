@@ -90,13 +90,13 @@ jobs:
 
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
               echo "Deploying Nest Stack..." | tee -a $LOG_FILE
-              docker stack deploy -c nest-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
+              docker stack deploy -c nest-stack.yml techeerzip --detach=true | tee -a $LOG_FILE || exit 1
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
               echo "Deploying Parser..." | tee -a $LOG_FILE
-              docker stack deploy -c parser-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
+              docker stack deploy -c parser-stack.yml techeerzip --detach=true | tee -a $LOG_FILE || exit 1
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
               echo "Deploying Crawler..." | tee -a $LOG_FILE
-              docker stack deploy -c crawler-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
+              docker stack deploy -c crawler-stack.yml techeerzip --detach=true | tee -a $LOG_FILE || exit 1
             else
               echo "Invalid image name"
               exit 1

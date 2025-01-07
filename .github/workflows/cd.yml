@@ -145,6 +145,9 @@ jobs:
           elif [ "${{ steps.copy.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
             echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
+          elif [ "${{ steps.scale_down.outcome }}" == "failure" ]; then
+            echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
+            echo "FAILED_LOGS=$(cat log_file.txt)" >> $GITHUB_ENV
           fi
       - name: Clean Up Files in Server
         if: always()

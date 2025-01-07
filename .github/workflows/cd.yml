@@ -156,8 +156,11 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           script: |
+            cat log_file.txt
             if grep -q "task: non-zero exit (1)" /home/ubuntu/log_file.txt; then
-                echo "FAILED_STEP=${{ github.event.inputs.image_name }}" >> "$GITHUB_ENV"
+                echo "FAILED_STEP=${{ github.event.inputs.image_name }}" >> $GITHUB_ENV
+            elif grep -q failure /home/ubuntu/log_file.txt; then
+                echo "FAILED_STEP=${{ github.event.inputs.image_name }}" >> $GITHUB_ENV
             fi
             rm -f /home/ubuntu/nest-stack.yml
             rm -f /home/ubuntu/parser-stack.yml

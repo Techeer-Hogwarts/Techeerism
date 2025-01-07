@@ -138,7 +138,7 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          echo "${{ steps.scale_down.outputs.stdout }}" > log_file.txt
+          "${{ steps.scale_down.outputs.stdout }}" > log_file.txt
           if grep -q "task: non-zero exit (1)" log_file.txt; then
               echo "FAILED_STEP=Scale" >> $GITHUB_ENV
           elif grep -q failure log_file.txt; then

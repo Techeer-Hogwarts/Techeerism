@@ -1,3 +1,3 @@
 #!/bin/bash
 set -e
-timeout 120s docker service scale techeerzip_crawler=1
+timeout 60s docker service scale techeerzip_crawler=1

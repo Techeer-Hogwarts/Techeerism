@@ -154,7 +154,7 @@ jobs:
           else 
               echo "WHat"
           fi
-          echo $FAILED_STEP
+          echo FAILED_LOGS=$(cat log_file.txt)
           if [ "$FAILED_STEP" != "" ]; then
             echo "The step '$FAILED_STEP' failed."
             curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \

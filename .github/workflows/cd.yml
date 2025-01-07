@@ -148,27 +148,6 @@ jobs:
       #     elif [ log_file.txt | grep -q "context canceled" ]; then
       #       echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
       #     fi
-      - name: Clean Up Files in Server
-        if: always()
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PASSWORD }}
-          script: |
-            cat log_file.txt
-            if grep -q "task: non-zero exit (1)" /home/ubuntu/log_file.txt; then
-                echo "FAILED_STEP=Scale" >> $GITHUB_ENV
-            elif grep -q failure log_file.txt; then
-                echo "FAILED_STEP=Scale" >> $GITHUB_ENV
-            fi
-            rm -f /home/ubuntu/nest-stack.yml
-            rm -f /home/ubuntu/parser-stack.yml
-            rm -f /home/ubuntu/crawler-stack.yml
-            rm -f /home/ubuntu/scale_nest.sh
-            rm -f /home/ubuntu/scale_parser.sh
-            rm -f /home/ubuntu/scale_crawler.sh
-            rm -f /home/ubuntu/log_file.txt
 
       - name: Final Message To Slack
         if: always()
@@ -181,6 +160,11 @@ jobs:
             FAILED_LOGS=$(cat log_file.txt)
           else
             FAILED_LOGS="No logs available"
+          fi
+          if [ grep -q "task: non-zero exit (1)" log_file.txt ]; then
+                echo "FAILED_STEP=Scale" >> $GITHUB_ENV
+          elif grep -q failure log_file.txt; then
+              echo "FAILED_STEP=Scale" >> $GITHUB_ENV
           fi
 
           if [ "$FAILED_STEP" != "" ]; then
@@ -210,3 +194,25 @@ jobs:
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'
           fi
+      
+      - name: Clean Up Files in Server
+        if: always()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cat log_file.txt
+            if grep -q "task: non-zero exit (1)" /home/ubuntu/log_file.txt; then
+                echo "FAILED_STEP=Scale" >> $GITHUB_ENV
+            elif grep -q failure log_file.txt; then
+                echo "FAILED_STEP=Scale" >> $GITHUB_ENV
+            fi
+            rm -f /home/ubuntu/nest-stack.yml
+            rm -f /home/ubuntu/parser-stack.yml
+            rm -f /home/ubuntu/crawler-stack.yml
+            rm -f /home/ubuntu/scale_nest.sh
+            rm -f /home/ubuntu/scale_parser.sh
+            rm -f /home/ubuntu/scale_crawler.sh
+            rm -f /home/ubuntu/log_file.txt

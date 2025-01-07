@@ -150,10 +150,6 @@ jobs:
           elif grep -q failure log_file.txt; then
               FAILED_STEP="Scale"
           fi
-          FAILED_LOGS=$(tail -14 log_file.txt | head -10)
-          echo $FAILED_LOGS
-          ESCAPED_LOGS=$(echo "$FAILED_LOGS" | sed 's/\\n/\\\\n/g')
-          echo $ESCAPED_LOGS
 
           if [ "$FAILED_STEP" != "" ]; then
             echo "The step '$FAILED_STEP' failed."
@@ -164,7 +160,7 @@ jobs:
                         "imageName": "'"$IMAGE_NAME"'",
                         "imageTag": "'"$DOCKER_IMAGE_TAG"'",
                         "failedStep": "'"$FAILED_STEP"'",
-                        "logs": "'"$ESCAPED_LOGS"'",
+                        "logs": "'"위 URL확인"'",
                         "secret": "'"$SLACK_SECRET"'",
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'

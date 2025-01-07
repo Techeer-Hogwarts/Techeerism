@@ -150,7 +150,7 @@ jobs:
           elif grep -q failure log_file.txt; then
               FAILED_STEP="Scale"
           fi
-          FAILED_LOGS=$(tail -n 10 log_file.txt)
+          FAILED_LOGS=$(tail -14 log_file.txt | head -10)
           echo $FAILED_LOGS
 
           if [ "$FAILED_STEP" != "" ]; then
@@ -162,7 +162,7 @@ jobs:
                         "imageName": "'"$IMAGE_NAME"'",
                         "imageTag": "'"$DOCKER_IMAGE_TAG"'",
                         "failedStep": "'"$FAILED_STEP"'",
-                        "logs": "'$FAILED_LOGS'",
+                        "logs": "'"$FAILED_LOGS"'",
                         "secret": "'"$SLACK_SECRET"'",
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'
@@ -175,7 +175,7 @@ jobs:
                         "imageName": "'"$IMAGE_NAME"'",
                         "imageTag": "'"$DOCKER_IMAGE_TAG"'",
                         "failedStep": "'"$FAILED_STEP"'",
-                        "logs": "'"$FAILED_LOGS"'",
+                        "logs": "'"None"'",
                         "secret": "'"$SLACK_SECRET"'",
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'

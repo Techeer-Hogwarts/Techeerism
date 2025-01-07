@@ -11,8 +11,19 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
+        failure_action: rollback
+        monitor: 30s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+        monitor: 15s
+        order: start-first
       restart_policy:
         condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 30s
 
 networks:
   main-network:

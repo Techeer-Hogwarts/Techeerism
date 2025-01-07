@@ -39,15 +39,18 @@ services:
         parallelism: 1
         delay: 10s
         failure_action: rollback
-        monitor: 60s
+        monitor: 30s
+        order: start-first
       rollback_config:
         parallelism: 1
         delay: 10s
+        monitor: 15s
+        order: start-first
       restart_policy:
         condition: on-failure
         delay: 5s
         max_attempts: 10
-        window: 1m
+        window: 30s
       labels:
         - traefik.enable=true
         - traefik.http.services.nest.loadbalancer.server.port=8000

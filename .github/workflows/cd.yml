@@ -47,6 +47,7 @@ jobs:
         id: deploy
         uses: appleboy/ssh-action@v1.1.0
         continue-on-error: false
+        capture_stdout: true
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -91,7 +92,8 @@ jobs:
 
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
               echo "Deploying Nest Stack..." | tee -a $LOG_FILE
-              docker stack deploy -c nest-stack.yml techeerzip --detach=true | tee -a $LOG_FILE || exit 1
+              docker stack deploy -c nest-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
+              echo ${{ inputs.capture_stdout }}
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
               echo "Deploying Parser..." | tee -a $LOG_FILE
               docker stack deploy -c parser-stack.yml techeerzip --detach=true | tee -a $LOG_FILE || exit 1
@@ -107,6 +109,7 @@ jobs:
         id: scale_down
         uses: appleboy/ssh-action@v1.1.0
         continue-on-error: false
+        capture_stdout: true
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -116,10 +119,10 @@ jobs:
             LOG_FILE="log_file.txt"
             export IMAGE_NAME=${{ github.event.inputs.image_name }}
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
-              ls
               echo "Scaling Down Nest" | tee -a $LOG_FILE
               chmod +x /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
               /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
+              echo ${{ inputs.capture_stdout }}
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
               echo "Scaling Down Parser" | tee -a $LOG_FILE
               chmod +x /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
@@ -132,7 +135,6 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
-            echo ${{ inputs.capture_stdout }}
       
       - name: Capture Failure Details
         if: always()

@@ -95,10 +95,10 @@ jobs:
               echo ${{ inputs.capture_stdout }}
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
               echo "Deploying Parser..." | tee -a $LOG_FILE
-              docker stack deploy -c parser-stack.yml techeerzip --detach=true | tee -a $LOG_FILE || exit 1
+              docker stack deploy -c parser-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
               echo "Deploying Crawler..." | tee -a $LOG_FILE
-              docker stack deploy -c crawler-stack.yml techeerzip --detach=true | tee -a $LOG_FILE || exit 1
+              docker stack deploy -c crawler-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
             else
               echo "Invalid image name"
               exit 1

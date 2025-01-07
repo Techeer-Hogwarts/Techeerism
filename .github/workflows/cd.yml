@@ -130,9 +130,6 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
-            echo "OUTPUT_LOG<<EOF" >> $GITHUB_OUTPUT
-            cat $LOG_FILE >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Final Message To Slack
         if: always()
@@ -141,8 +138,7 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          echo "${{ steps.scale_down.outputs.OUTPUT_LOG }}" > log_file.txt
-          cat log_file.txt
+          echo ${{ steps.scale_down.outputs.stdout }} > log_file.txt
           if grep -q "task: non-zero exit (1)" log_file.txt; then
               echo "FAILED_STEP=Scale" >> $GITHUB_ENV
           elif grep -q failure log_file.txt; then

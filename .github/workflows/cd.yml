@@ -131,23 +131,23 @@ jobs:
               exit 1
             fi
       
-      - name: Capture Failure Details
-        if: always()
-        run: |
-          echo steps.scale_down.outputs.stderr
-          if [ "${{ steps.deploy.outcome }}" == "failure" ]; then
-            echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
-          elif [ "${{ steps.copy.outcome }}" == "failure" ]; then
-            echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
-          elif [ "${{ steps.scale_down.outcome }}" == "failure" ]; then
-            echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
-          elif [ "${{ steps.deploy.outputs.stdout }}" | grep -q "context canceled" ]; then
-            echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
-          elif [ "${{ steps.copy.outputs.stdout }}" | grep -q "context canceled" ]; then
-            echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
-          elif [ "${{ steps.scale_down.outputs.stdout }}" | grep -q "context canceled" ]; then
-            echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
-          fi
+      # - name: Capture Failure Details
+      #   if: always()
+      #   run: |
+      #     echo steps.scale_down.outputs.stderr
+      #     if [ "${{ steps.deploy.outcome }}" == "failure" ]; then
+      #       echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
+      #     elif [ "${{ steps.copy.outcome }}" == "failure" ]; then
+      #       echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
+      #     elif [ "${{ steps.scale_down.outcome }}" == "failure" ]; then
+      #       echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
+      #     elif [ "${{ steps.deploy.outputs.stdout }}" | grep -q "context canceled" ]; then
+      #       echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
+      #     elif [ "${{ steps.copy.outputs.stdout }}" | grep -q "context canceled" ]; then
+      #       echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
+      #     elif [ log_file.txt | grep -q "context canceled" ]; then
+      #       echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
+      #     fi
       - name: Clean Up Files in Server
         if: always()
         uses: appleboy/ssh-action@master
@@ -156,7 +156,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cat log_file.txt
+            if [ cat log_file.txt | grep -q "task: non-zero exit (1)" ]; then
+              echo "FAILED_STEP=${{ github.event.inputs.image_name }}" >> $GITHUB_ENV
+            fi
             rm -f /home/ubuntu/nest-stack.yml
             rm -f /home/ubuntu/parser-stack.yml
             rm -f /home/ubuntu/crawler-stack.yml

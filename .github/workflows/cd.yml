@@ -156,6 +156,7 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
+          cat log_file.txt
           if [ -f log_file.txt ]; then
             FAILED_LOGS=$(cat log_file.txt)
           else

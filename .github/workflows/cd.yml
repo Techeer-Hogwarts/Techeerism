@@ -130,6 +130,9 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
+            echo "OUTPUT_LOG<<EOF" >> $GITHUB_OUTPUT
+            cat $LOG_FILE >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Final Message To Slack
         if: always()
@@ -138,8 +141,8 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          ${{ steps.scale_down.outputs.stdout }} > log_file.txt
-          $FAILED_LOGS= cat log_file.txt | grep "failure"
+          echo "${{ steps.scale_down.outputs.OUTPUT_LOG }}" > log_file.txt
+          cat log_file.txt
           if grep -q "task: non-zero exit (1)" log_file.txt; then
               echo "FAILED_STEP=Scale" >> $GITHUB_ENV
           elif grep -q failure log_file.txt; then
@@ -182,12 +185,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           script: |
-            # cat log_file.txt
-            # if grep -q "task: non-zero exit (1)" /home/ubuntu/log_file.txt; then
-            #     echo "FAILED_STEP=Scale" >> $GITHUB_ENV
-            # elif grep -q failure log_file.txt; then
-            #     echo "FAILED_STEP=Scale" >> $GITHUB_ENV
-            # fi
             rm -f /home/ubuntu/nest-stack.yml
             rm -f /home/ubuntu/parser-stack.yml
             rm -f /home/ubuntu/crawler-stack.yml

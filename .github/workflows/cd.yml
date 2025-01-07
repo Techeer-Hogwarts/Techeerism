@@ -12,9 +12,9 @@ on:
       replicas:
         description: "Number of replicas"
         required: true
-      environment:
-        description: "Environment to deploy"
-        required: true
+      # environment:
+      #   description: "Environment to deploy"
+      #   required: true
 
 jobs:
   deploy:

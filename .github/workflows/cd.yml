@@ -46,6 +46,8 @@ jobs:
       - name: Deploy to Server
         id: deploy
         uses: appleboy/ssh-action@v1.1.0
+        continue-on-error: false
+        script_stop: true
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -105,6 +107,8 @@ jobs:
         if: ${{ github.event.inputs.replicas }} == "1"
         id: scale_down
         uses: appleboy/ssh-action@v1.1.0
+        continue-on-error: false
+        script_stop: true
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}

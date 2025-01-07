@@ -104,12 +104,14 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
+          capture_stdout: true
+          capture_stderr: true
+
       - name: Scale Down if Needed
         if: ${{ github.event.inputs.replicas }} == "1"
         id: scale_down
         uses: appleboy/ssh-action@v1.1.0
         continue-on-error: false
-        capture_stdout: true
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -135,6 +137,8 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
+          capture_stdout: true
+          capture_stderr: true
       
       - name: Capture Failure Details
         if: always()
@@ -169,6 +173,7 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
+          echo ${{ steps.deploy.outputs.stderr }}
           if [ -f log_file.txt ]; then
             FAILED_LOGS=$(cat log_file.txt)
           else

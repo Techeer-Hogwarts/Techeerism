@@ -151,7 +151,8 @@ jobs:
               FAILED_STEP="Scale"
           fi
           FAILED_LOGS=$(tail -n 10 log_file.txt)
-          ESCAPED_LOGS=$(echo "$FAILED_LOGS" | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo $FAILED_LOGS
+
           if [ "$FAILED_STEP" != "" ]; then
             echo "The step '$FAILED_STEP' failed."
             curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \
@@ -161,7 +162,7 @@ jobs:
                         "imageName": "'"$IMAGE_NAME"'",
                         "imageTag": "'"$DOCKER_IMAGE_TAG"'",
                         "failedStep": "'"$FAILED_STEP"'",
-                        "logs": "'"$ESCAPED_LOGS"'",
+                        "logs": "'$FAILED_LOGS'",
                         "secret": "'"$SLACK_SECRET"'",
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'
@@ -174,7 +175,7 @@ jobs:
                         "imageName": "'"$IMAGE_NAME"'",
                         "imageTag": "'"$DOCKER_IMAGE_TAG"'",
                         "failedStep": "'"$FAILED_STEP"'",
-                        "logs": "'"$ESCAPED_LOGS"'",
+                        "logs": "'"$FAILED_LOGS"'",
                         "secret": "'"$SLACK_SECRET"'",
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'

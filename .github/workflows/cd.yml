@@ -175,6 +175,9 @@ jobs:
                       }'
           fi
           cat log_file.txt
+      - name: Console Log
+        if: always()
+        run: cat log_file.txt
       
       - name: Clean Up Files in Server
         if: always()

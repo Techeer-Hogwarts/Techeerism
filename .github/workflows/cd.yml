@@ -154,7 +154,7 @@ jobs:
               echo "WHat"
               echo "FAILED_STEP=" >> $GITHUB_ENV
           fi
-
+          echo $FAILED_STEP
           if [ "$FAILED_STEP" != "" ]; then
             echo "The step '$FAILED_STEP' failed."
             curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \

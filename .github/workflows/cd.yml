@@ -134,8 +134,6 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
-          capture_stdout: true
-          capture_stderr: true
       
       - name: Capture Failure Details
         if: always()

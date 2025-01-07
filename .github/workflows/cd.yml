@@ -118,7 +118,6 @@ jobs:
               echo "Scaling Down Nest" | tee -a $LOG_FILE
               chmod +x /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
               /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
-              echo ${{ inputs.capture_stdout }}
             elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
               echo "Scaling Down Parser" | tee -a $LOG_FILE
               chmod +x /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
@@ -157,6 +156,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           script: |
+            cat log_file.txt
             rm -f /home/ubuntu/nest-stack.yml
             rm -f /home/ubuntu/parser-stack.yml
             rm -f /home/ubuntu/crawler-stack.yml

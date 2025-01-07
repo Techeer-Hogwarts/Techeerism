@@ -144,14 +144,14 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          if grep -q "task: non-zero exit (1)" log_file.txt; then
+          if grep -q non-zero log_file.txt; then
               echo 'FAILED_STEP=Scale' >> $GITHUB_ENV
-              echo "ehh"
+              echo 'ehh'
           elif grep -q failure log_file.txt; then
               echo 'FAILED_STEP=Scale' >> $GITHUB_ENV
-              echo "what in the w"
+              echo 'what in the w'
           else 
-              echo "WHat"
+              echo 'WHat'
               echo 'FAILED_STEP='' >> $GITHUB_ENV
           fi
           echo $FAILED_STEP

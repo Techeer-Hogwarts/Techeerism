@@ -130,6 +130,12 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
+      - name: Save Logs To File
+        if: always()
+        run: |
+          cat <<EOF > log_file.txt 
+          ${{ steps.scale_down.outputs.stdout }}
+          EOF
 
       - name: Final Message To Slack
         if: always()
@@ -138,13 +144,13 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          cat <<EOF > log_file.txt 
-          ${{ steps.scale_down.outputs.stdout }}
-          EOF
           if grep -q "task: non-zero exit (1)" log_file.txt; then
               echo "FAILED_STEP=Scale" >> $GITHUB_ENV
           elif grep -q failure log_file.txt; then
               echo "FAILED_STEP=Scale" >> $GITHUB_ENV
+          else 
+              echo "WHat"
+              echo "FAILED_STEP=" >> $GITHUB_ENV
           fi
 
           if [ "$FAILED_STEP" != "" ]; then
@@ -174,10 +180,6 @@ jobs:
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'
           fi
-          cat log_file.txt
-      - name: Console Log
-        if: always()
-        run: cat log_file.txt
       
       - name: Clean Up Files in Server
         if: always()

@@ -113,7 +113,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           capture_stdout: 'true'
-          capture_stderr: 'true'
           script: |
             set -e
             LOG_FILE="log_file.txt"
@@ -172,8 +171,6 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          # echo ${{ steps.deploy.outputs.stdout }}
-          # echo ${{ steps.scale_down.outputs.stdout }}
           if [ -f log_file.txt ]; then
             FAILED_LOGS=$(cat log_file.txt)
           else

@@ -37,19 +37,19 @@ services:
           - node.labels.instance == main
       update_config:
         parallelism: 1
-        delay: 10s
+        delay: 5s
         failure_action: rollback
-        monitor: 30s
+        monitor: 15s
         order: start-first
       rollback_config:
         parallelism: 1
-        delay: 10s
+        delay: 5s
         monitor: 15s
         order: start-first
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 10
+        max_attempts: 3
         window: 30s
       labels:
         - traefik.enable=true

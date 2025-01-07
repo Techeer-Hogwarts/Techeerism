@@ -45,11 +45,12 @@ jobs:
       
       - name: Deploy to Server
         id: deploy
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
+          capture_stdout: 'true'
           script: |
             set -e
             LOG_FILE="log_file.txt"
@@ -102,17 +103,16 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
-          capture_stdout: true
-          capture_stderr: true
 
       - name: Scale Down if Needed
         if: ${{ github.event.inputs.replicas }} == "1"
         id: scale_down
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
+          capture_stdout: 'true'
           script: |
             set -e
             LOG_FILE="log_file.txt"
@@ -149,7 +149,7 @@ jobs:
           fi
       - name: Clean Up Files in Server
         if: always()
-        uses: appleboy/ssh-action@v1.1.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -170,7 +170,8 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          echo ${{ steps.deploy.outputs.stderr }}
+          echo ${{ steps.deploy.outputs.stdout }}
+          echo ${{ steps.scale_down.outputs.stdout }}
           if [ -f log_file.txt ]; then
             FAILED_LOGS=$(cat log_file.txt)
           else

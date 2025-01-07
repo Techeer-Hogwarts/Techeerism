@@ -135,6 +135,7 @@ jobs:
       - name: Capture Failure Details
         if: always()
         run: |
+          echo steps.scale_down.outputs.stderr
           if [ "${{ steps.deploy.outcome }}" == "failure" ]; then
             echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
           elif [ "${{ steps.copy.outcome }}" == "failure" ]; then

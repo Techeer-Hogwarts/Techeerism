@@ -130,24 +130,6 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
-      
-      # - name: Capture Failure Details
-      #   if: always()
-      #   run: |
-      #     echo steps.scale_down.outputs.stderr
-      #     if [ "${{ steps.deploy.outcome }}" == "failure" ]; then
-      #       echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
-      #     elif [ "${{ steps.copy.outcome }}" == "failure" ]; then
-      #       echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
-      #     elif [ "${{ steps.scale_down.outcome }}" == "failure" ]; then
-      #       echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
-      #     elif [ "${{ steps.deploy.outputs.stdout }}" | grep -q "context canceled" ]; then
-      #       echo "FAILED_STEP=Deploy Step" >> $GITHUB_ENV
-      #     elif [ "${{ steps.copy.outputs.stdout }}" | grep -q "context canceled" ]; then
-      #       echo "FAILED_STEP=Copy Step" >> $GITHUB_ENV
-      #     elif [ log_file.txt | grep -q "context canceled" ]; then
-      #       echo "FAILED_STEP=Scale Step" >> $GITHUB_ENV
-      #     fi
 
       - name: Final Message To Slack
         if: always()
@@ -156,14 +138,10 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
         run: |
-          cat log_file.txt
-          if [ -f log_file.txt ]; then
-            FAILED_LOGS=$(cat log_file.txt)
-          else
-            FAILED_LOGS="No logs available"
-          fi
-          if [ grep -q "task: non-zero exit (1)" log_file.txt ]; then
-                echo "FAILED_STEP=Scale" >> $GITHUB_ENV
+          ${{ steps.scale_down.outputs.stdout }} > log_file.txt
+          $FAILED_LOGS= cat log_file.txt | grep "failure"
+          if grep -q "task: non-zero exit (1)" log_file.txt; then
+              echo "FAILED_STEP=Scale" >> $GITHUB_ENV
           elif grep -q failure log_file.txt; then
               echo "FAILED_STEP=Scale" >> $GITHUB_ENV
           fi

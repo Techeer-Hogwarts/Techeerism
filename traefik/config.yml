@@ -18,6 +18,7 @@ http:
         certResolver: "letsencrypt"
       middlewares:
         - "search-api-rate-limit"
+        - "search-strip-prefix"
     
     notification-api:
       rule: "Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v2/notification`)"
@@ -28,6 +29,7 @@ http:
         certResolver: "letsencrypt"
       middlewares:
         - "search-api-rate-limit"
+        - "notification-strip-prefix"
 
 
   services:
@@ -49,3 +51,7 @@ http:
       stripPrefix:
         prefixes:
           - "/api/v2/search"
+    notification-strip-prefix:
+      stripPrefix:
+        prefixes:
+          - "/api/v2/notification"

@@ -9,16 +9,43 @@ http:
     #     certResolver: "letsencrypt"
 
     # External API
-    external-api:
-      rule: "Host(`external.techeerzip.cloud`)"
-      service: "external-api"
+    search-api:
+      rule: "Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v2/search`)"
+      service: "search-api"
       entryPoints:
         - "websecure"
       tls:
         certResolver: "letsencrypt"
+      middlewares:
+        - "search-api-rate-limit"
+    
+    notification-api:
+      rule: "Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v2/notification`)"
+      service: "notification-api"
+      entryPoints:
+        - "websecure"
+      tls:
+        certResolver: "letsencrypt"
+      middlewares:
+        - "search-api-rate-limit"
+
 
   services:
-    external-api:
+    search-api:
       loadBalancer:
         servers:
-          - url: "{{env "HOME_SERVER_URL"}}"
+          - url: "{{env "HOME_SERVER_URL"}}:8080"
+    notification-api:
+      loadBalancer:
+        servers:
+          - url: "{{env "HOME_SERVER_URL"}}:8081"
+  
+  middlewares:
+    search-api-rate-limit:
+      rateLimit:
+        average: 10
+        burst: 20
+    search-strip-prefix:
+      stripPrefix:
+        prefixes:
+          - "/api/v2/search"

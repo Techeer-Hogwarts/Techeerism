@@ -31,3 +31,22 @@ scrape_configs:
           city_name: geoip_city_name
           country_name: geoip_country_name
           continent_name: geoip_continent_name
+  - job_name: flog_scrape
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+        filters:
+          - name: label
+            values: ["logging=promtail"]
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'logstream'
+      - source_labels: ['__meta_docker_container_label_logging_jobname']
+        target_label: 'job'
+      - source_labels: ['__meta_docker_port_public']
+        target_label: 'port'
+      - source_labels: ['__meta_docker_network_ip']
+        target_label: 'ip'

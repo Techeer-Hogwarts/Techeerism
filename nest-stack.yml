@@ -59,6 +59,8 @@ services:
         # - traefik.http.routers.nest.middlewares=nest-stripprefix
         # - traefik.http.middlewares.nest-stripprefix.stripprefix.prefixes=/api/v1
         - traefik.http.routers.nest.tls.certresolver=letsencrypt
+        - logging=promtail
+        - logging_jobname=nest
 
 networks:
   main-network:

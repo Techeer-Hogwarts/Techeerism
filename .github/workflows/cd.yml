@@ -103,7 +103,7 @@ jobs:
             fi
 
       - name: Scale Down if Needed
-        if: ${{ github.event.inputs.replicas }} == "1"
+        if: ${{ github.event.inputs.replicas }} == 1
         id: scale_down
         uses: appleboy/ssh-action@master
         with:

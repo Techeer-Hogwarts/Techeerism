@@ -24,6 +24,8 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - main-network
+    ports:
+      - "3100:3100"
     deploy:
       replicas: 1
       placement:

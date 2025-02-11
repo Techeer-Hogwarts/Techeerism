@@ -36,11 +36,6 @@ services:
         delay: 5s
         max_attempts: 10
         window: 30s
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-retries: "5"
 
 networks:
   main-network:

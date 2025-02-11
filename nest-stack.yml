@@ -62,8 +62,11 @@ services:
         - traefik.http.middlewares.ratelimit-middleware.ratelimit.average=10
         - traefik.http.middlewares.ratelimit-middleware.ratelimit.burst=20
         - traefik.http.routers.myservice.middlewares=ratelimit-middleware
-        - logging=promtail
-        - logging_jobname=nest
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-retries: "5"
 
 networks:
   main-network:

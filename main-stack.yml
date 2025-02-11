@@ -19,7 +19,7 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--log.level=INFO"
       - "--accesslog=true"
-      # - "--accesslog.filepath=/traefik/logs/access.log"
+      - "--accesslog.filepath=/traefik/logs/access.log"
       - "--accesslog.bufferingsize=100"
       - "--accesslog.format=json"
       - "--accesslog.fields.defaultmode=keep"
@@ -45,7 +45,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - ./traefik/config.yml:/dynamic-config.yml:ro
       - "traefik-certificates:/letsencrypt"  
-      # - "traefik_logs:/traefik/logs/"
+      - "traefik_logs:/traefik/logs/"
     environment:
       - HOME_SERVER_URL=$HOME_SERVER_URL
     networks:
@@ -175,7 +175,7 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
       # - ./promtail/GeoLite2-City.mmdb:/etc/promtail/GeoLite2-City.mmdb
-      # - traefik_logs:/traefik/logs/
+      - traefik_logs:/traefik/logs/
     command:
       - -config.file=/etc/promtail/config.yaml
       - -config.expand-env=true

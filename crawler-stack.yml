@@ -13,6 +13,7 @@ services:
     labels:
       - logging=promtail
       - logging_jobname=crawler
+    restart: always
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS

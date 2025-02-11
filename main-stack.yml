@@ -218,6 +218,7 @@ services:
       - main-network
     environment:
       - REDIS_PASSWORD=$REDIS_PASSWORD
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     tty: true
     deploy:
       replicas: 1

@@ -64,6 +64,8 @@ services:
         - "traefik.http.services.mydashboard.loadbalancer.server.port=8090"
         - "traefik.http.routers.mydashboard.middlewares=auth"
         - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$6dXZ/kXf$$8KlXA1NQ5MfJDOyLveifr1"
+        - logging=promtail
+        - logging_jobname=traefikContainer
 
   # 전체 관리자 페이지
   portainer:

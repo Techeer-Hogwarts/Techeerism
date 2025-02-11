@@ -183,6 +183,8 @@ services:
       - loki
     networks:
       - main-network
+    ports:
+      - "9080:9080"
     deploy:
       replicas: 1
       placement:

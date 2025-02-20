@@ -3,6 +3,18 @@ services:
     image: suhach0523/techeerism-parser:$IMAGE_TAG
     networks:
       - main-network
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_PASSWORD=$REDIS_PASSWORD
+      - RABBITMQ_USER=$RABBITMQ_DEFAULT_USER
+      - RABBITMQ_PASSWORD=$RABBITMQ_DEFAULT_PASS
+      - RABBITMQ_HOST=$RABBITMQ_HOST
+    labels:
+      - logging=promtail
+      - logging_jobname=parser
+    restart: always
+    tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
       placement:

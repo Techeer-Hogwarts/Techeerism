@@ -85,6 +85,7 @@ jobs:
             export ARCHIVE_FOLDER_ID=${{ secrets.ARCHIVE_FOLDER_ID }}
             export SLACKBOT_URL=${{ secrets.SLACKBOT_URL }}
             export SLACKBOT_PERSONAL_URL=${{ secrets.SLACKBOT_PERSONAL_URL }}
+            export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
 
             if [ "$SERVICE_REPLICAS" == "1" ]; then
               export SERVICE_REPLICAS="2"

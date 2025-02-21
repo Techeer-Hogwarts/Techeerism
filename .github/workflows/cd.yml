@@ -26,13 +26,13 @@ jobs:
 
       - name: Deploy the app
         run: echo "Deploying the app..."
-      
+
       - name: Echo inputs
         run: |
           echo "Image tag = ${{ github.event.inputs.image_tag }}"
           echo "Image name = ${{ github.event.inputs.image_name }}"
           echo "Replicas = ${{ github.event.inputs.replicas }}"
-      
+
       - name: Copy file to Server
         id: copy
         uses: appleboy/scp-action@v0.1.7
@@ -42,7 +42,7 @@ jobs:
           key: ${{ secrets.SSH_PASSWORD }}
           source: nest-stack.yml, parser-stack.yml, crawler-stack.yml, scale_nest.sh, scale_parser.sh, scale_crawler.sh
           target: /home/ubuntu/
-      
+
       - name: Deploy to Server
         id: deploy
         uses: appleboy/ssh-action@master
@@ -50,7 +50,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
-          capture_stdout: 'true'
+          capture_stdout: "true"
           script: |
             LOG_FILE="log_file.txt"
             export IMAGE_TAG=${{ github.event.inputs.image_tag }}
@@ -86,6 +86,8 @@ jobs:
             export SLACKBOT_URL=${{ secrets.SLACKBOT_URL }}
             export SLACKBOT_PERSONAL_URL=${{ secrets.SLACKBOT_PERSONAL_URL }}
             export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            export PROJECT_NAME=${{ secrets.PROJECT_NAME }}
+            export LOGGER_LEVEL=${{ secrets.LOGGER_LEVEL }}
 
             if [ "$SERVICE_REPLICAS" == "1" ]; then
               export SERVICE_REPLICAS="2"
@@ -113,7 +115,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
-          capture_stdout: 'true'
+          capture_stdout: "true"
           script: |
             LOG_FILE="log_file.txt"
             export IMAGE_NAME=${{ github.event.inputs.image_name }}
@@ -181,7 +183,7 @@ jobs:
                         "jobURL": "'"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"
                       }'
           fi
-      
+
       - name: Clean Up Files in Server
         if: always()
         uses: appleboy/ssh-action@master

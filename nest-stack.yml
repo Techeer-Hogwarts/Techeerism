@@ -34,6 +34,7 @@ services:
       - SLACKBOT_PERSONAL_URL=$SLACKBOT_PERSONAL_URL
       - LOGGER_LEVEL=$LOGGER_LEVEL
       - PROJECT_NAME=$PROJECT_NAME
+      - INDEX_API_URL=$INDEX_API_URL
     deploy:
       replicas: $SERVICE_REPLICAS
       placement:

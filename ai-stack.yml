@@ -28,7 +28,7 @@ services:
   #       - traefik.http.routers.ai.tls.certresolver=letsencrypt
   #       - traefik.http.middlewares.ai-auth.basicauth.users=hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq
 
-  grafana:
+  grafana-test:
     image: grafana/grafana:latest
     ports:
       - "8085:3000"

@@ -1,22 +1,39 @@
 services:
-  openwebui:
-    image: ghcr.io/open-webui/open-webui:main
-    networks:
-      - main-network
+  # openwebui:
+  #   image: ghcr.io/open-webui/open-webui:main
+  #   networks:
+  #     - main-network
+  #   ports:
+  #     - 8085:8080
+  #   tty: true
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   volumes:
+  #     - open-webui-local:/app/backend/data
+  #   deploy:
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: on-failure
+  #       delay: 5s
+  #       max_attempts: 60
+  #       window: 300s
+  #     placement:
+  #       constraints:
+  #         - node.labels.instance == homem1
+  #     labels:
+  #       - traefik.enable=true
+  #       - traefik.http.services.ai.loadbalancer.server.port=8085
+  #       - traefik.http.routers.ai.entrypoints=websecure
+  #       - traefik.http.routers.ai.rule=Host(`ai.techeerzip.cloud`)
+  #       - traefik.http.routers.ai.tls.certresolver=letsencrypt
+  #       - traefik.http.middlewares.ai-auth.basicauth.users=hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq
+
+  grafana:
+    image: grafana/grafana:latest
     ports:
-      - 8085:8080
-    tty: true
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - open-webui-local:/app/backend/data
+      - "8085:3000"
     deploy:
       replicas: 1
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 60
-        window: 300s
       placement:
         constraints:
           - node.labels.instance == homem1
@@ -27,10 +44,15 @@ services:
         - traefik.http.routers.ai.rule=Host(`ai.techeerzip.cloud`)
         - traefik.http.routers.ai.tls.certresolver=letsencrypt
         - traefik.http.middlewares.ai-auth.basicauth.users=hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq
+    volumes:
+      - grafana_data2:/var/lib/grafana
+    networks:
+      - main-network
 
 networks:
   main-network:
     external: true
 
 volumes:
-  open-webui-local:
+  # open-webui-local:
+  grafana_data2:

@@ -1,0 +1,32 @@
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    networks:
+      - main-network
+    restart: always
+    ports:
+      - "3001:8080"
+    tty: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - open-webui-local:/app/backend/data
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == homem1
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.ai.loadbalancer.server.port=3001
+        - traefik.http.routers.ai.entrypoints=websecure
+        - traefik.http.routers.ai.rule=Host(`ai.techeerzip.cloud`)
+        - traefik.http.routers.ai.tls.certresolver=letsencrypt
+        - traefik.http.middlewares.ratelimit-middleware.ratelimit.average=10
+        - traefik.http.middlewares.ratelimit-middleware.ratelimit.burst=20
+        - traefik.http.routers.myservice.middlewares=ratelimit-middleware
+        - traefik.http.middlewares.auth.basicauth.users=hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq
+
+networks:
+  main-network:
+    external: true

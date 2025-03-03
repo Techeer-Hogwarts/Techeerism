@@ -132,7 +132,8 @@ services:
     image: google/cadvisor:latest
     deploy:
       mode: global
-      constraints:
+      placement:
+        constraints:
           - node.platform.os == linux
     labels:
       - prometheus-job=cadvisor

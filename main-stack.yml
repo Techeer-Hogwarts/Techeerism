@@ -48,6 +48,7 @@ services:
       - "traefik_logs:/traefik/logs/"
     environment:
       - HOME_SERVER_URL=$HOME_SERVER_URL
+      - HOME_SERVER_URL2=$HOME_SERVER_URL2
     networks:
       - main-network
     deploy:

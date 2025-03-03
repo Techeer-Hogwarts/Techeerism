@@ -1,12 +1,14 @@
 http:
   routers:
-    # mydashboard:
-    #   rule: "Host(`traefik.techeerzip.cloud`)"
-    #   service: "api@internal"
-    #   entryPoints:
-    #     - "websecure"
-    #   tls:
-    #     certResolver: "letsencrypt"
+    mydashboard:
+      rule: "Host(`ai.techeerzip.cloud`)"
+      service: "ollama-webui"
+      entryPoints:
+        - "websecure"
+      tls:
+        certResolver: "letsencrypt"
+      middlewares:
+        - "ai-auth"
 
     # External API
     search-api:
@@ -39,12 +41,20 @@ http:
       loadBalancer:
         servers:
           - url: "{{env "HOME_SERVER_URL"}}:8081"
+    ollama-webui:
+      loadBalancer:
+        servers:
+          - url: "{{env "HOME_SERVER_URL2"}}:8085"
   
   middlewares:
     search-api-rate-limit:
       rateLimit:
         average: 10
         burst: 20
+    ai-auth:
+      basicAuth:
+        users:
+          - "hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq"
     # search-strip-prefix:
     #   stripPrefix:
     #     prefixes:

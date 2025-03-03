@@ -7,8 +7,6 @@ http:
         - "websecure"
       tls:
         certResolver: "letsencrypt"
-      middlewares:
-        - "ai-auth"
 
     # External API
     search-api:
@@ -51,10 +49,7 @@ http:
       rateLimit:
         average: 10
         burst: 20
-    ai-auth:
-      basicAuth:
-        users:
-          - "hogwarts:$2y$05$I2Wnqk9ZGvKBy1AlsKCqZOX.093MkoukkiGt5nhrSiw/H.sH0Aety"
+
     # search-strip-prefix:
     #   stripPrefix:
     #     prefixes:

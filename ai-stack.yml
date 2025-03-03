@@ -26,9 +26,9 @@ services:
         - traefik.http.routers.ai.entrypoints=websecure
         - traefik.http.routers.ai.rule=Host(`ai.techeerzip.cloud`)
         - traefik.http.routers.ai.tls.certresolver=letsencrypt
-        - traefik.http.middlewares.ratelimit-middleware.ratelimit.average=10
-        - traefik.http.middlewares.ratelimit-middleware.ratelimit.burst=20
-        - traefik.http.routers.myservice.middlewares=ratelimit-middleware
+        - traefik.http.middlewares.airatelimit-middleware.ratelimit.average=10
+        - traefik.http.middlewares.airatelimit-middleware.ratelimit.burst=20
+        - traefik.http.routers.ai.middlewares=airatelimit-middleware
         - traefik.http.middlewares.auth.basicauth.users=hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq
 
 networks:

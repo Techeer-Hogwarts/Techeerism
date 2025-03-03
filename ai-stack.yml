@@ -29,7 +29,7 @@ services:
         - traefik.http.middlewares.airatelimit-middleware.ratelimit.average=10
         - traefik.http.middlewares.airatelimit-middleware.ratelimit.burst=20
         - traefik.http.routers.ai.middlewares=airatelimit-middleware
-        - traefik.http.middlewares.auth.basicauth.users=hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq
+        - traefik.http.middlewares.ai-auth.basicauth.users=hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq
 
 networks:
   main-network:

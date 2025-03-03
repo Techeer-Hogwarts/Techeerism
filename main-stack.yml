@@ -135,6 +135,7 @@ services:
       placement:
         constraints:
           - node.platform.os == linux
+          - node.labels.instance != homem1
     labels:
       - prometheus-job=cadvisor
     ports:
@@ -168,6 +169,7 @@ services:
       placement:
         constraints:
           - node.platform.os == linux
+          - node.labels.instance != homem1
     labels:
       - prometheus-job=node-exporter
 

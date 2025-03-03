@@ -3,7 +3,6 @@ services:
     image: ghcr.io/open-webui/open-webui:main
     networks:
       - main-network
-    restart: always
     ports:
       - "3001:8080"
     tty: true
@@ -13,6 +12,11 @@ services:
       - open-webui-local:/app/backend/data
     deploy:
       replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 60
+        window: 300s
       placement:
         constraints:
           - node.labels.instance == homem1
@@ -30,3 +34,6 @@ services:
 networks:
   main-network:
     external: true
+
+volumes:
+  open-webui-local:

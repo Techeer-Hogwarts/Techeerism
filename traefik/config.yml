@@ -54,7 +54,7 @@ http:
     ai-auth:
       basicAuth:
         users:
-          - "hogwarts:hogwarts:$2y$05$I2Wnqk9ZGvKBy1AlsKCqZOX.093MkoukkiGt5nhrSiw/H.sH0Aety"
+          - "hogwarts:$2y$05$I2Wnqk9ZGvKBy1AlsKCqZOX.093MkoukkiGt5nhrSiw/H.sH0Aety"
     # search-strip-prefix:
     #   stripPrefix:
     #     prefixes:

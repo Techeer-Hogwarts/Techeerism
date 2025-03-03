@@ -1,7 +1,7 @@
 http:
   routers:
     mydashboard:
-      rule: "Host(`ai.techeerzip.cloud`)"
+      rule: "Host(`webai.techeerzip.cloud`)"
       service: "ollama-webui"
       entryPoints:
         - "websecure"

@@ -1,6 +1,6 @@
 http:
   routers:
-    mydashboard:
+    ollama-webui:
       rule: "Host(`webai.techeerzip.cloud`)"
       service: "ollama-webui"
       entryPoints:
@@ -54,7 +54,7 @@ http:
     ai-auth:
       basicAuth:
         users:
-          - "hogwarts:$$2y$$05$$H6X3cyhXLtBsCwzUeZXimOEyAyKcJn1SOsziYY7lYy2I3lTyHw4vq"
+          - "hogwarts:hogwarts:$2y$05$I2Wnqk9ZGvKBy1AlsKCqZOX.093MkoukkiGt5nhrSiw/H.sH0Aety"
     # search-strip-prefix:
     #   stripPrefix:
     #     prefixes:

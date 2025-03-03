@@ -132,6 +132,8 @@ services:
     image: google/cadvisor:latest
     deploy:
       mode: global
+      constraints:
+          - node.platform.os == linux
     labels:
       - prometheus-job=cadvisor
     ports:
@@ -162,6 +164,9 @@ services:
       - main-network
     deploy:
       mode: global
+      placement:
+        constraints:
+          - node.platform.os == linux
     labels:
       - prometheus-job=node-exporter
 

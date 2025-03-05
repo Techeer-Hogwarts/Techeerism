@@ -135,8 +135,7 @@ services:
       mode: global
       placement:
         constraints:
-          - node.platform.os == linux
-          - node.labels.instance != homem1
+          - node.platform.architecture == x86_64
     labels:
       - prometheus-job=cadvisor
     ports:
@@ -169,8 +168,7 @@ services:
       mode: global
       placement:
         constraints:
-          - node.platform.os == linux
-          - node.labels.instance != homem1
+          - node.platform.architecture == x86_64
     labels:
       - prometheus-job=node-exporter
 

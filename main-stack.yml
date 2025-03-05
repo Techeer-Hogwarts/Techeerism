@@ -135,7 +135,7 @@ services:
       mode: global
       placement:
         constraints:
-          - node.platform.architecture == x86_64
+          - node.labels.archtype != arm
     labels:
       - prometheus-job=cadvisor
     ports:
@@ -168,7 +168,7 @@ services:
       mode: global
       placement:
         constraints:
-          - node.platform.architecture == x86_64
+          - node.labels.archtype != arm
     labels:
       - prometheus-job=node-exporter
 

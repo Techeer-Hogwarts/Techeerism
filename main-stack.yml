@@ -131,6 +131,7 @@ services:
   # 컨터이너 메트릭 데이터 수집
   cadvisor:
     image: google/cadvisor:latest
+    privileged: true
     deploy:
       mode: global
       placement:

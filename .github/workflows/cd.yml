@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME_STAGING }}
           key: ${{ secrets.SSH_PASSWORD_STAGING }}
           source: staging/nest-stack.yml
-          target: /home/jungeun/
+          target: /home/jungeun/nest-stack.yml
 
       - name: Deploy to Server Prod
         id: deploy

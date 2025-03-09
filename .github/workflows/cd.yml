@@ -189,7 +189,8 @@ jobs:
       #       fi
 
       - name: Scale Down if Needed Prod
-        if: ${{ github.event.inputs.replicas == '1' }} && ${{ github.event.inputs.environment == 'production' }}
+        needs: deploy
+        if: ${{ github.event.inputs.replicas == '1' }}
         id: scale_down
         uses: appleboy/ssh-action@master
         with:
@@ -218,7 +219,8 @@ jobs:
             fi
       
       # - name: Scale Down if Needed Staging
-      #   if: ${{ github.event.inputs.replicas == '1' }} && ${{ github.event.inputs.environment == 'staging' }}
+      #   needs: deploy-staging
+      #   if: ${{ github.event.inputs.replicas == '1' }}
       #   id: scale_down-staging
       #   uses: appleboy/ssh-action@master
       #   with:

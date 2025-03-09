@@ -47,7 +47,7 @@ jobs:
       
       - name: Copy file to Server Staging
         if: ${{ github.event.inputs.environment == 'staging' }}
-        id: copy
+        id: copy-staging
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST_STAGING }}
@@ -123,7 +123,7 @@ jobs:
             fi
 
       # - name: Deploy to Server Staging
-      #   id: deploy
+      #   id: deploy-staging
       #   if: ${{ github.event.inputs.environment == 'staging' }}
       #   uses: appleboy/ssh-action@master
       #   with:
@@ -219,7 +219,7 @@ jobs:
       
       # - name: Scale Down if Needed Staging
       #   if: ${{ github.event.inputs.replicas == '1' }} && ${{ github.event.inputs.environment == 'staging' }}
-      #   id: scale_down
+      #   id: scale_down-staging
       #   uses: appleboy/ssh-action@master
       #   with:
       #     host: ${{ secrets.SSH_HOST_STAGING }}

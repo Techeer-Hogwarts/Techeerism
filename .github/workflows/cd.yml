@@ -210,53 +210,43 @@ jobs:
           key: ${{ secrets.SSH_PASSWORD }}
           capture_stdout: "true"
           script: |
-            LOG_FILE="log_file.txt"
             export IMAGE_NAME=${{ github.event.inputs.image_name }}
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
-              echo "Scaling Down Nest" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
-              /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
-            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
-              echo "Scaling Down Parser" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
-              /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
-            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
-              echo "Scaling Down Crawler" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale_crawler.sh | tee -a $LOG_FILE
-              /home/ubuntu/scale_crawler.sh | tee -a $LOG_FILE
+              echo "Scaling Down Nest"
+              timeout 60s docker service scale techeerzip_staging_nest=1
             else
               echo "Invalid image name"
               exit 1
             fi
       
-      # - name: Scale Down if Needed Staging
-      #   if: ${{ github.event.inputs.replicas == '1' && github.event.inputs.environment != 'production' }}
-      #   id: scale_down-staging
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SSH_HOST_STAGING }}
-      #     username: ${{ secrets.SSH_USERNAME_STAGING }}
-      #     key: ${{ secrets.SSH_PASSWORD_STAGING }}
-      #     capture_stdout: "true"
-      #     script: |
-      #       LOG_FILE="log_file.txt"
-      #       export IMAGE_NAME=${{ github.event.inputs.image_name }}
-      #       if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
-      #         echo "Scaling Down Nest" | tee -a $LOG_FILE
-      #         chmod +x /home/jungeun/scale_nest.sh | tee -a $LOG_FILE
-      #         /home/jungeun/scale_nest.sh | tee -a $LOG_FILE
-      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
-      #         echo "Scaling Down Parser" | tee -a $LOG_FILE
-      #         chmod +x /home/jungeun/scale_parser.sh | tee -a $LOG_FILE
-      #         /home/jungeun/scale_parser.sh | tee -a $LOG_FILE
-      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
-      #         echo "Scaling Down Crawler" | tee -a $LOG_FILE
-      #         chmod +x /home/jungeun/scale_crawler.sh | tee -a $LOG_FILE
-      #         /home/jungeun/scale_crawler.sh | tee -a $LOG_FILE
-      #       else
-      #         echo "Invalid image name"
-      #         exit 1
-      #       fi
+      - name: Scale Down if Needed Staging
+        if: ${{ github.event.inputs.replicas == '1' && github.event.inputs.environment != 'production' }}
+        id: scale_down-staging
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_STAGING }}
+          username: ${{ secrets.SSH_USERNAME_STAGING }}
+          key: ${{ secrets.SSH_PASSWORD_STAGING }}
+          capture_stdout: "true"
+          script: |
+            LOG_FILE="log_file.txt"
+            export IMAGE_NAME=${{ github.event.inputs.image_name }}
+            if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
+              echo "Scaling Down Nest" | tee -a $LOG_FILE
+              chmod +x /home/jungeun/scale_nest.sh | tee -a $LOG_FILE
+              /home/jungeun/scale_nest.sh | tee -a $LOG_FILE
+            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
+              echo "Scaling Down Parser" | tee -a $LOG_FILE
+              chmod +x /home/jungeun/scale_parser.sh | tee -a $LOG_FILE
+              /home/jungeun/scale_parser.sh | tee -a $LOG_FILE
+            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
+              echo "Scaling Down Crawler" | tee -a $LOG_FILE
+              chmod +x /home/jungeun/scale_crawler.sh | tee -a $LOG_FILE
+              /home/jungeun/scale_crawler.sh | tee -a $LOG_FILE
+            else
+              echo "Invalid image name"
+              exit 1
+            fi
 
       - name: Save Logs To File
         if: always()

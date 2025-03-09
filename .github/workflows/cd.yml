@@ -130,7 +130,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME_STAGING }}
           key: ${{ secrets.SSH_PASSWORD_STAGING }}
           script: |
-            export STACK_NAME==${{ secrets.STAGING_STACK_NAME }}
+            export STACK_NAME=${{ secrets.STAGING_STACK_NAME }}
             export SERVICE_NAME=${{ secrets.STAGING_SERVICE_NAME }}
             export POSTGRES_USER=${{ secrets.STAGING_POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.STAGING_POSTGRES_PASSWORD }}

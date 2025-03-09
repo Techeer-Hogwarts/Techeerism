@@ -130,6 +130,12 @@ jobs:
           username: ${{ secrets.SSH_USERNAME_STAGING }}
           key: ${{ secrets.SSH_PASSWORD_STAGING }}
           script: |
+            export STACK_NAME==${{ secrets.STAGING_STACK_NAME }}
+            export SERVICE_NAME=${{ secrets.STAGING_SERVICE_NAME }}
+            export POSTGRES_USER=${{ secrets.STAGING_POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.STAGING_POSTGRES_PASSWORD }}
+            export POSTGRES_DB=${{ secrets.STAGING_POSTGRES_DB }}
+            export BACKUP_DIR=${{ secrets.STAGING_BACKUP_DIR }}
             LOG_FILE="log_file.txt"
             echo "Backing up DB Data..." | tee -a $LOG_FILE
             /home/jungeun/db_backup.sh | tee -a $LOG_FILE

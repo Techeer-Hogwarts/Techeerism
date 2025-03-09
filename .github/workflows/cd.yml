@@ -122,72 +122,77 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
+      - name: Backup DB Data Staging
+        if: ${{ github.event.inputs.environment == 'staging' }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_STAGING }}
+          username: ${{ secrets.SSH_USERNAME_STAGING }}
+          key: ${{ secrets.SSH_PASSWORD_STAGING }}
+          script: |
+            LOG_FILE="log_file.txt"
+            echo "Backing up DB Data..." | tee -a $LOG_FILE
+            /home/jungeun/db_backup.sh | tee -a $LOG_FILE
 
-      # - name: Deploy to Server Staging
-      #   id: deploy-staging
-      #   if: ${{ github.event.inputs.environment == 'staging' }}
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SSH_HOST_STAGING }}
-      #     username: ${{ secrets.SSH_USERNAME_STAGING }}
-      #     key: ${{ secrets.SSH_PASSWORD_STAGING }}
-      #     capture_stdout: "true"
-      #     script: |
-      #       LOG_FILE="log_file.txt"
-      #       export IMAGE_TAG=${{ github.event.inputs.image_tag }}
-      #       export SERVICE_REPLICAS=${{ github.event.inputs.replicas }}
-      #       export IMAGE_NAME=${{ github.event.inputs.image_name }}
-      #       export DATABASE_URL=${{ secrets.DATABASE_URL_STAGING }}
-      #       export REDIS_HOST=${{ secrets.REDIS_HOST }}
-      #       export REDIS_PORT=${{ secrets.REDIS_PORT }}
-      #       export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-      #       export EMAIL_USER=${{ secrets.EMAIL_USER }}
-      #       export EMAIL_PASS=${{ secrets.EMAIL_PASS }}
-      #       export JWT_SECRET=${{ secrets.JWT_SECRET }}
-      #       export SLACK_SECRET=${{ secrets.SLACK_DEPLOY_SECRET }}
-      #       export RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
-      #       export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
-      #       export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
-      #       export SWAGGER_USER=${{ secrets.SWAGGER_USER }}
-      #       export SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
-      #       export AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }}
-      #       export AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
-      #       export AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
-      #       export AWS_REGION=${{ secrets.AWS_REGION }}
-      #       export REDIS_URL=${{ secrets.REDIS_URL }}
-      #       export RABBITMQ_URL=${{ secrets.RABBITMQ_URL }}
-      #       export GOOGLE_AUTH_TYPE=${{ secrets.GOOGLE_AUTH_TYPE }}
-      #       export GOOGLE_AUTH_PROJECT_ID=${{ secrets.GOOGLE_AUTH_PROJECT_ID }}
-      #       export GOOGLE_AUTH_PRIVATE_KEY_ID=${{ secrets.GOOGLE_AUTH_PRIVATE_KEY_ID }}
-      #       export GOOGLE_AUTH_PRIVATE_KEY=${{ secrets.GOOGLE_AUTH_PRIVATE_KEY }}
-      #       export GOOGLE_AUTH_CLIENT_EMAIL=${{ secrets.GOOGLE_AUTH_CLIENT_EMAIL }}
-      #       export GOOGLE_AUTH_CLIENT_ID=${{ secrets.GOOGLE_AUTH_CLIENT_ID }}
-      #       export GOOGLE_FOLDER_ID=${{ secrets.GOOGLE_FOLDER_ID }}
-      #       export ARCHIVE_FOLDER_ID=${{ secrets.ARCHIVE_FOLDER_ID }}
-      #       export SLACKBOT_URL=${{ secrets.SLACKBOT_URL }}
-      #       export SLACKBOT_PERSONAL_URL=${{ secrets.SLACKBOT_PERSONAL_URL }}
-      #       export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-      #       export PROJECT_NAME=${{ secrets.PROJECT_NAME }}
-      #       export LOGGER_LEVEL=${{ secrets.LOGGER_LEVEL_STAGING }}
-      #       export INDEX_API_URL=${{ secrets.INDEX_API_URL_STAGING }}
+      - name: Deploy to Server Staging
+        id: deploy-staging
+        if: ${{ github.event.inputs.environment == 'staging' }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_STAGING }}
+          username: ${{ secrets.SSH_USERNAME_STAGING }}
+          key: ${{ secrets.SSH_PASSWORD_STAGING }}
+          capture_stdout: "true"
+          script: |
+            LOG_FILE="log_file.txt"
+            export IMAGE_TAG=${{ github.event.inputs.image_tag }}
+            export SERVICE_REPLICAS=${{ github.event.inputs.replicas }}
+            export IMAGE_NAME=${{ github.event.inputs.image_name }}
+            export DATABASE_URL=${{ secrets.DATABASE_URL_STAGING }}
+            export REDIS_HOST=${{ secrets.REDIS_HOST }}
+            export REDIS_PORT=${{ secrets.REDIS_PORT }}
+            export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+            export EMAIL_USER=${{ secrets.EMAIL_USER }}
+            export EMAIL_PASS=${{ secrets.EMAIL_PASS }}
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export SLACK_SECRET=${{ secrets.SLACK_DEPLOY_SECRET }}
+            export RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
+            export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
+            export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
+            export SWAGGER_USER=${{ secrets.SWAGGER_USER }}
+            export SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
+            export AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }}
+            export AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
+            export AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+            export AWS_REGION=${{ secrets.AWS_REGION }}
+            export REDIS_URL=${{ secrets.REDIS_URL }}
+            export RABBITMQ_URL=${{ secrets.RABBITMQ_URL }}
+            export GOOGLE_AUTH_TYPE=${{ secrets.GOOGLE_AUTH_TYPE }}
+            export GOOGLE_AUTH_PROJECT_ID=${{ secrets.GOOGLE_AUTH_PROJECT_ID }}
+            export GOOGLE_AUTH_PRIVATE_KEY_ID=${{ secrets.GOOGLE_AUTH_PRIVATE_KEY_ID }}
+            export GOOGLE_AUTH_PRIVATE_KEY=${{ secrets.GOOGLE_AUTH_PRIVATE_KEY }}
+            export GOOGLE_AUTH_CLIENT_EMAIL=${{ secrets.GOOGLE_AUTH_CLIENT_EMAIL }}
+            export GOOGLE_AUTH_CLIENT_ID=${{ secrets.GOOGLE_AUTH_CLIENT_ID }}
+            export GOOGLE_FOLDER_ID=${{ secrets.GOOGLE_FOLDER_ID }}
+            export ARCHIVE_FOLDER_ID=${{ secrets.ARCHIVE_FOLDER_ID }}
+            export SLACKBOT_URL=${{ secrets.SLACKBOT_URL }}
+            export SLACKBOT_PERSONAL_URL=${{ secrets.SLACKBOT_PERSONAL_URL }}
+            export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            export PROJECT_NAME=${{ secrets.PROJECT_NAME }}
+            export LOGGER_LEVEL=${{ secrets.LOGGER_LEVEL_STAGING }}
+            export INDEX_API_URL=${{ secrets.INDEX_API_URL_STAGING }}
 
-      #       if [ "$SERVICE_REPLICAS" == "1" ]; then
-      #         export SERVICE_REPLICAS="2"
-      #       fi
+            if [ "$SERVICE_REPLICAS" == "1" ]; then
+              export SERVICE_REPLICAS="2"
+            fi
 
-      #       if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
-      #         echo "Deploying Nest Stack..." | tee -a $LOG_FILE
-      #         docker stack deploy -c nest-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
-      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
-      #         echo "Deploying Parser..." | tee -a $LOG_FILE
-      #         docker stack deploy -c parser-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
-      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
-      #         echo "Deploying Crawler..." | tee -a $LOG_FILE
-      #         docker stack deploy -c crawler-stack.yml techeerzip --detach=true | tee -a $LOG_FILE
-      #       else
-      #         echo "Invalid image name"
-      #         exit 1
-      #       fi
+            if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
+              echo "Deploying Nest Stack..." | tee -a $LOG_FILE
+              docker stack deploy -c nest-stack.yml techeerzip_staging --detach=true | tee -a $LOG_FILE
+            else
+              echo "Invalid image name"
+              exit 1
+            fi
 
       - name: Scale Down if Needed Prod
         if: ${{ github.event.inputs.replicas == '1' && github.event.inputs.environment == 'production'}}
@@ -315,18 +320,12 @@ jobs:
             rm -f /home/ubuntu/scale_crawler.sh
             rm -f /home/ubuntu/log_file.txt
 
-      # - name: Clean Up Files in Server Staging
-      #   if: ${{ github.event.inputs.environment == 'staging' }}
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SSH_HOST_STAGING }}
-      #     username: ${{ secrets.SSH_USERNAME_STAGING }}
-      #     key: ${{ secrets.SSH_PASSWORD_STAGING }}
-      #     script: |
-      #       rm -f /home/jungeun/nest-stack.yml
-      #       rm -f /home/jungeun/parser-stack.yml
-      #       rm -f /home/jungeun/crawler-stack.yml
-      #       rm -f /home/jungeun/scale_nest.sh
-      #       rm -f /home/jungeun/scale_parser.sh
-      #       rm -f /home/jungeun/scale_crawler.sh
-      #       rm -f /home/jungeun/log_file.txt
+      - name: Clean Up Files in Server Staging
+        if: ${{ github.event.inputs.environment == 'staging' }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_STAGING }}
+          username: ${{ secrets.SSH_USERNAME_STAGING }}
+          key: ${{ secrets.SSH_PASSWORD_STAGING }}
+          script: |
+            rm -f /home/jungeun/nest-stack.yml

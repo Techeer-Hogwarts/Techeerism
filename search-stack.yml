@@ -1,29 +1,96 @@
 services:
-  search:
-    image: suhach0523/techeerism-search:1.1.
-    # networks:
-    #   - main-network
+  search-container:
+    image: suhach0523/techeerism-search:latest
+    networks:
+      - staging-network
+    container_name: search-container
+    env_file:
+      - .env
+    environment:
+      - MEILISEARCH_ADDR=http://meilisearch:7700
+      - MEILISEARCH_KEY=${MEILISEARCH_API_KEY}
+      - GIN_MODE=release
+      - SWAGGER_USERNAME=${SWAGGER_USERNAME}
+      - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
-      - "8085:8085"
-    # deploy:
-    #   replicas: 1
-    #   placement:
-    #     constraints:
-    #       - node.labels.instance == home-server
-    #   update_config:
-    #     parallelism: 1
-    #     delay: 10s
-    #   restart_policy:
-    #     condition: on-failure
-    #   labels:
-    #     - traefik.enable=true
-    #     - traefik.http.services.search.loadbalancer.server.port=8085
-    #     - traefik.http.routers.search.entrypoints=websecure
-    #     - traefik.http.routers.search.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v2`)
-    #     # - traefik.http.routers.search.middlewares=search-stripprefix
-    #     # - traefik.http.middlewares.search-stripprefix.stripprefix.prefixes=/api/v1
-    #     - traefik.http.routers.search.tls.certresolver=letsencrypt
+      - "8082:8080"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1GB
+        reservations:
+          cpus: '0.1'
+          memory: 100MB
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.search.loadbalancer.server.port=8082
+        - traefik.http.routers.search.entrypoints=websecure
+        - traefik.http.routers.search.rule=Host(`search.yje.cloud`) && PathPrefix(`/api/v2`)
+        - traefik.http.routers.search.tls.certresolver=letsencrypt
+  
+  search-cron:
+    image: suhach0523/techeerism-cron:latest
+    container_name: search-cron
+    networks:
+      - staging-network
+    env_file:
+      - .env
+    environment:
+      - MEILISEARCH_ADDR=http://meilisearch:7700
+      - MEILISEARCH_KEY=${MEILISEARCH_API_KEY}
+      - GIN_MODE=release
+      - SWAGGER_USERNAME=${SWAGGER_USERNAME}
+      - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_SSL_MODE=${DB_SSL_MODE}
+    ports:
+      - "8081:8081"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1GB
+        reservations:
+          cpus: '0.1'
+          memory: 100MB
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.search-cron.loadbalancer.server.port=8082
+        - traefik.http.routers.search-cron.entrypoints=websecure
+        - traefik.http.routers.search-cron.rule=Host(`search.yje.cloud`) && PathPrefix(`/api/v1`)
+        - traefik.http.routers.search-cron.tls.certresolver=letsencrypt
+  
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: meilisearch
+    networks:
+      - staging-network
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=${MEILISEARCH_API_KEY}
+      - MEILI_EXPERIMENTAL_ENABLE_METRICS=true
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_ENV=production
+    env_file:
+      - .env
+    volumes:
+      - meilisearch-data:/meili_data/data.ms
+    restart: unless-stopped
+  
 
-# networks:
-#   main-network:
-#     external: true
+
+networks:
+  staging-network:
+    external: true
+
+volumes:
+  meilisearch-data:

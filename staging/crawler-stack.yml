@@ -1,8 +1,10 @@
 services:
-  parser:
-    image: suhach0523/techeerism-parser:$IMAGE_TAG
+  crawler:
+    image: suhach0523/techeerism-crawler:$IMAGE_TAG
     networks:
-      - main-network
+      - staging-network
+    env_file:
+      - .env
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
@@ -12,14 +14,11 @@ services:
       - RABBITMQ_HOST=$RABBITMQ_HOST
     labels:
       - logging=promtail
-      - logging_jobname=parser
+      - logging_jobname=crawler
     restart: always
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
-      placement:
-        constraints:
-          - node.labels.instance == parser
       update_config:
         parallelism: 1
         delay: 10s
@@ -38,5 +37,5 @@ services:
         window: 30s
 
 networks:
-  main-network:
+  staging-network:
     external: true

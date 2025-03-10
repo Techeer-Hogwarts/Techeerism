@@ -1,0 +1,257 @@
+services:
+  # 로드밸런싱 및 리버스 프록시 & HTTPS 설정
+  traefik:
+    image: traefik:v2.9
+    command:
+      - "--api.insecure=false"
+      - "--providers.docker=true" 
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=staging-network"
+      - "--providers.docker.watch=true"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entryPoints.web.http.redirections.entrypoint.scheme=https"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=angal2310@tukorea.ac.kr"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--log.level=DEBUG"
+      - "--accesslog=true"
+      - "--accesslog.filepath=/traefik/logs/access.log"
+      - "--accesslog.bufferingsize=100"
+      - "--accesslog.format=json"
+      - "--accesslog.fields.defaultmode=keep"
+      - "--accesslog.fields.headers.defaultmode=keep"
+      - "--accesslog.fields.headers.names.X-Forwarded-For=keep"
+      - "--api.dashboard=true"
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.buckets=0.100000, 0.300000, 1.200000, 5.000000"
+      - "--metrics.prometheus.addEntryPointsLabels=true"
+      - "--metrics.prometheus.addServicesLabels=true"
+      - "--entryPoints.metrics.address=:8091"
+      - "--metrics.prometheus.entryPoint=metrics"
+    ports:
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+      - target: 8090
+        published: 8090
+        protocol: tcp
+        mode: host
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "traefik-certificates:/letsencrypt"  
+      - "traefik_logs:/traefik/logs/"
+    networks:
+      - staging-network
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.mydashboard.rule=Host(`traefik.yje.kr`)"
+        - 'traefik.http.routers.mydashboard.entrypoints=websecure'
+        - "traefik.http.routers.mydashboard.service=api@internal"
+        - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
+        - "traefik.http.services.mydashboard.loadbalancer.server.port=8090"
+        - "traefik.http.routers.mydashboard.middlewares=auth"
+        - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$6dXZ/kXf$$8KlXA1NQ5MfJDOyLveifr1"
+        - logging=promtail
+        - logging_jobname=traefikContainer
+
+  # 전체 관리자 페이지
+  portainer:
+    image: portainer/portainer-ce:latest
+    ports:
+      - "9000:9000"
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.portainer.loadbalancer.server.port=9000
+        - traefik.http.routers.portainer.entrypoints=websecure
+        - traefik.http.routers.portainer.rule=Host(`portainer.yje.kr`)
+        - traefik.http.routers.portainer.tls.certresolver=letsencrypt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - staging-network
+  
+  # 포테이너 agent
+  agent:
+    image: portainer/agent:latest
+    environment:
+      - AGENT_CLUSTER_ADDR=tasks.agent
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - staging-network
+    deploy:
+      mode: global
+
+  # 모니터링 메트릭 데이터 수집
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    user: root
+    networks:
+      - staging-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    deploy:
+      replicas: 1
+  
+  # 컨터이너 메트릭 데이터 수집
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    privileged: true
+    deploy:
+      mode: global
+    labels:
+      - prometheus-job=cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    networks:
+      - staging-network
+  
+  # 호스트 메트릭 데이터 수집
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:v1.8.1
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - staging-network
+    deploy:
+      mode: global
+    labels:
+      - prometheus-job=node-exporter
+
+  # 로그 수집
+  promtail:
+    image:  grafana/promtail:latest
+    volumes:
+      - ./promtail:/etc/promtail/
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik_logs:/traefik/logs/
+    command:
+      - -config.file=/etc/promtail/config.yaml
+      - -config.expand-env=true
+    depends_on:
+      - loki
+    networks:
+      - staging-network
+    ports:
+      - "9080:9080"
+    deploy:
+      replicas: 1
+  
+  # 레디스 & 레빗MQ
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15692:15692"
+    env_file:
+      - .env
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    networks:
+      - staging-network
+    tty: true
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1GB
+        reservations:
+          cpus: '0.1'
+          memory: 100MB
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    networks:
+      - staging-network
+    env_file:
+      - .env
+    environment:
+      - REDIS_PASSWORD=$REDIS_PASSWORD
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    tty: true
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1GB
+        reservations:
+          cpus: '0.1'
+          memory: 100MB
+  
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.grafana.loadbalancer.server.port=3000
+        - traefik.http.routers.grafana.entrypoints=websecure
+        - traefik.http.routers.grafana.tls.certresolver=letsencrypt
+        - traefik.http.routers.grafana.rule=Host(`grafana.yje.kr`)
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - staging-network
+  
+  loki:
+    image: grafana/loki:latest
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - staging-network
+    ports:
+      - "3100:3100"
+    deploy:
+      replicas: 1
+    
+networks:
+  staging-network:
+    driver: overlay
+    external: true
+
+volumes:
+  traefik-certificates:
+  portainer_data:
+  grafana_data:
+  traefik_logs:
+  grafana_data:

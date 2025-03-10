@@ -37,6 +37,13 @@ services:
       - INDEX_API_URL=$INDEX_API_URL_STAGING
     deploy:
       replicas: $SERVICE_REPLICAS
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1GB
+        reservations:
+          cpus: "0.25"
+          memory: 256MB
       update_config:
         parallelism: 1
         delay: 5s

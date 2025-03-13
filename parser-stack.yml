@@ -10,9 +10,7 @@ services:
       - RABBITMQ_USER=$RABBITMQ_DEFAULT_USER
       - RABBITMQ_PASSWORD=$RABBITMQ_DEFAULT_PASS
       - RABBITMQ_HOST=$RABBITMQ_HOST
-    labels:
-      - logging=promtail
-      - logging_jobname=parser
+      - 
     restart: always
     tty: true
     deploy:
@@ -20,6 +18,13 @@ services:
       placement:
         constraints:
           - node.labels.instance == parser
+      resources:
+        limits:
+          cpus: "0.8"
+          memory: 800M
+        reservations:
+          cpus: "0.25"
+          memory: 100MB
       update_config:
         parallelism: 1
         delay: 10s

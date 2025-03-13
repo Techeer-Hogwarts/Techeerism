@@ -106,6 +106,7 @@ jobs:
             export LOGGER_LEVEL=${{ secrets.LOGGER_LEVEL }}
             export INDEX_API_URL=${{ secrets.INDEX_API_URL }}
             export AI_HOST_URL=${{ secrets.AI_HOST_URL }}
+            export SEARCH_API_URL=${{ secrets.SEARCH_API_URL }}
 
             if [ "$SERVICE_REPLICAS" == "1" ]; then
               export SERVICE_REPLICAS="2"

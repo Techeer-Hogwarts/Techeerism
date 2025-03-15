@@ -19,7 +19,6 @@ services:
       - GOOGLE_AUTH_CLIENT_EMAIL=$GOOGLE_AUTH_CLIENT_EMAIL
       - GOOGLE_AUTH_CLIENT_ID=$GOOGLE_AUTH_CLIENT_ID
       - GOOGLE_AUTH_CLIENT_X509_CERT_URL=$GOOGLE_AUTH_CLIENT_X509_CERT_URL
-    restart: always
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
@@ -48,7 +47,7 @@ services:
         condition: on-failure
         delay: 5s
         max_attempts: 10
-        window: 30s
+        window: 120s
 
 networks:
   main-network:

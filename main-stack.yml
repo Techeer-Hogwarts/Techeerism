@@ -17,7 +17,7 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.email=whysano517@gmail.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--log.level=DEBUG"
+      - "--log.level=INFO"
       - "--accesslog=true"
       - "--accesslog.filepath=/traefik/logs/access.log"
       - "--accesslog.bufferingsize=100"

@@ -232,7 +232,7 @@ services:
       replicas: 1
       placement:
         constraints:
-          - node.labels.instance == main
+          - node.labels.instance == oracle2
     
 networks:
   main-network:

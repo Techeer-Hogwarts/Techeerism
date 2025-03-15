@@ -126,7 +126,7 @@ services:
       replicas: 1
       placement:
         constraints:
-          - node.labels.instance == oracle2
+          - node.labels.instance == main
   
   # 컨터이너 메트릭 데이터 수집
   cadvisor:

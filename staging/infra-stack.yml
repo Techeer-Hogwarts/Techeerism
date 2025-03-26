@@ -30,6 +30,10 @@ services:
       - "--metrics.prometheus.addServicesLabels=true"
       - "--entryPoints.metrics.address=:8091"
       - "--metrics.prometheus.entryPoint=metrics"
+      - "--tracing=true"
+      - "--tracing.opentelemetry=true"
+      - "--tracing.opentelemetry.address=otel-collector:4317"
+      - "--tracing.opentelemetry.insecure=true"
     ports:
       - target: 443
         published: 443
@@ -243,6 +247,86 @@ services:
       - "3100:3100"
     deploy:
       replicas: 1
+  
+  jaeger:
+    image: jaegertracing/all-in-one:1.67.0
+    environment:
+      - SPAN_STORAGE_TYPE=cassandra
+      - CASSANDRA_SERVERS=scylla
+      - CASSANDRA_KEYSPACE=jaeger_v1_test
+      - CASSANDRA_PORT=9042
+      - CASSANDRA_CONSISTENCY=ONE
+    ports:
+      - "16686:16686"
+      - "14250:14250"
+    volumes:
+      - jaeger-data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "500M"
+        reservations:
+          cpus: "0.25"
+          memory: "300M"
+    networks:
+      - staging-network
+  
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.122.1
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./opentelemetry/otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.75"
+          memory: "750M"
+        reservations:
+          cpus: "0.5"
+          memory: "500M"
+    networks:
+      - staging-network
+  
+  scylla:
+    image: scylladb/scylla:latest
+    command: --smp 2 --memory 4G --overprovisioned 1
+    ports:
+      - "9042:9042"
+    volumes:
+      - scylla-data:/var/lib/scylla
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: "4G"
+        reservations:
+          cpus: "1.0"
+          memory: "2G"
+    networks:
+      - staging-network
+
+  jaeger-schema-init:
+    image: jaegertracing/jaeger-cassandra-schema:latest
+    command: ["--cassandra.keyspace=jaeger_v1_test", "--cassandra.servers=scylla"]
+    deploy:
+      restart_policy:
+        condition: on-failure
+      mode: replicated
+      replicas: 1
+    depends_on:
+      - scylla
+    networks:
+      - staging-network
     
 networks:
   staging-network:
@@ -255,3 +339,5 @@ volumes:
   grafana_data:
   traefik_logs:
   grafana_data:
+  jaeger-data:
+  scylla-data:

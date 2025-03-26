@@ -9,7 +9,6 @@ exporters:
     endpoint: "jaeger:14250"
     tls:
       insecure: true
-  logging: {}
 
 service:
   pipelines:

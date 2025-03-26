@@ -248,18 +248,20 @@ services:
   
   jaeger:
     image: jaegertracing/all-in-one:1.67.0
-    # environment:
-    #   - SPAN_STORAGE_TYPE=cassandra
-    #   - CASSANDRA_SERVERS=scylla
-    #   - CASSANDRA_KEYSPACE=jaeger_v1_test
-    #   - CASSANDRA_PORT=9042
-    #   - CASSANDRA_CONSISTENCY=ONE
+    environment:
+      SPAN_STORAGE_TYPE: cassandra
+      CASSANDRA_SERVERS: scylla
+      CASSANDRA_KEYSPACE: jaeger_v1_test
+      CASSANDRA_PORT: 9042
+      CASSANDRA_CONSISTENCY: ONE
     ports:
       - "16686:16686"
       - "14250:14250"
       - "14268:14268"
     volumes:
       - jaeger-data:/data
+    depends_on:
+      - scylla
     deploy:
       mode: replicated
       replicas: 1
@@ -306,17 +308,27 @@ services:
       replicas: 1
       resources:
         limits:
+          cpus: "3.0"
+          memory: "6G"
+        reservations:
           cpus: "2.0"
           memory: "4G"
-        reservations:
-          cpus: "1.0"
-          memory: "2G"
     networks:
       - staging-network
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "SELECT now() FROM system.local;"]
+      interval: 30s
+      retries: 5
+      start_period: 30s
 
   jaeger-schema-init:
     image: jaegertracing/jaeger-cassandra-schema:latest
-    command: ["--cassandra.keyspace=jaeger_v1_test", "--cassandra.servers=scylla"]
+    environment:
+      CASSANDRA_PROTOCOL_VERSION: 4
+      CASSANDRA_VERSION: 4
+      CQLSH_HOST: scylla
+      DATACENTER: test
+      MODE: test
     deploy:
       restart_policy:
         condition: on-failure

@@ -31,9 +31,8 @@ services:
       - "--entryPoints.metrics.address=:8091"
       - "--metrics.prometheus.entryPoint=metrics"
       - "--tracing=true"
-      - "--tracing.opentelemetry=true"
-      - "--tracing.opentelemetry.address=otel-collector:4317"
-      - "--tracing.opentelemetry.insecure=true"
+      - "--tracing.otlp.endpoint=otel-collector:4317"
+      - "--tracing.otlp.insecure=true"
     ports:
       - target: 443
         published: 443

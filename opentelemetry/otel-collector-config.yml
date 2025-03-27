@@ -2,16 +2,20 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: ":4317"
       http:
+        endpoint: ":4318"
 
 exporters:
   otlp:
-    endpoint: "jaeger:14250"
+    endpoint: jaeger:4317
     tls:
       insecure: true
+  debug:
+    verbosity: detailed
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp]
+      exporters: [otlp, debug]

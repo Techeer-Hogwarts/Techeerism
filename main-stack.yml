@@ -131,7 +131,6 @@ services:
   # 컨터이너 메트릭 데이터 수집
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
-    privileged: true
     deploy:
       mode: global
       placement:

@@ -63,12 +63,12 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.services.nest.loadbalancer.server.port=8000
-        - traefik.http.routers.nest.entrypoints=websecure
+        - traefik.http.routers.nest.entryPoints=websecure
         - traefik.http.routers.nest.rule=Host(`api.yje.kr`) && PathPrefix(`/api/v1`)
-        - traefik.http.routers.nest.tls.certresolver=letsencrypt
+        - traefik.http.routers.nest.tls.certResolver=letsencrypt
         - traefik.http.middlewares.ratelimit-middleware.ratelimit.average=10
         - traefik.http.middlewares.ratelimit-middleware.ratelimit.burst=20
-        - traefik.http.routers.myservice.middlewares=ratelimit-middleware
+        - traefik.http.routers.nest.middlewares=ratelimit-middleware
 
 networks:
   staging-network:

@@ -66,7 +66,7 @@ services:
         - traefik.http.routers.nest.tls.certresolver=letsencrypt
         - traefik.http.middlewares.ratelimit-middleware.ratelimit.average=10
         - traefik.http.middlewares.ratelimit-middleware.ratelimit.burst=20
-        - traefik.http.routers.myservice.middlewares=ratelimit-middleware
+        - traefik.http.routers.nest.middlewares=ratelimit-middleware
 
 networks:
   main-network:

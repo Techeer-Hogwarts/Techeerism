@@ -1,20 +1,21 @@
 services:
   # 로드밸런싱 및 리버스 프록시 & HTTPS 설정
   traefik:
-    image: traefik:v2.9
+    image: traefik:v3.3
     command:
       - "--api.insecure=false"
       - "--providers.docker=true" 
-      - "--providers.docker.swarmMode=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=staging-network"
-      - "--providers.docker.watch=true"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--providers.swarm=true"
+      - "--providers.swarm.exposedByDefault=false"
+      - "--providers.docker.exposedByDefault=false"
+      - "--providers.swarm.network=staging-network"
+      - "--providers.swarm.watch=true"
+      - "--entryPoints.websecure.address=:443"
+      - "--entryPoints.web.http.redirections.entrypoint.to=websecure"
       - "--entryPoints.web.http.redirections.entrypoint.scheme=https"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=angal2310@tukorea.ac.kr"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesResolvers.letsencrypt.acme.tlsChallenge=true"
+      - "--certificatesResolvers.letsencrypt.acme.email=angal2310@tukorea.ac.kr"
+      - "--certificatesResolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--log.level=DEBUG"
       - "--accesslog=true"
       - "--accesslog.filepath=/traefik/logs/access.log"
@@ -31,7 +32,7 @@ services:
       - "--entryPoints.metrics.address=:8091"
       - "--metrics.prometheus.entryPoint=metrics"
       - "--tracing=true"
-      - "--tracing.jaeger.collector.endpoint=http://jaeger:14268/api/traces"
+      - "--tracing.otlp.grpc.endpoint=http://otel-collector:4317"
     ports:
       - target: 443
         published: 443
@@ -52,9 +53,9 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.mydashboard.rule=Host(`traefik.yje.kr`)"
-        - 'traefik.http.routers.mydashboard.entrypoints=websecure'
+        - 'traefik.http.routers.mydashboard.entryPoints=websecure'
         - "traefik.http.routers.mydashboard.service=api@internal"
-        - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.mydashboard.tls.certResolver=letsencrypt"
         - "traefik.http.services.mydashboard.loadbalancer.server.port=8090"
         - "traefik.http.routers.mydashboard.middlewares=auth"
         - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$6dXZ/kXf$$8KlXA1NQ5MfJDOyLveifr1"
@@ -71,9 +72,9 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.services.portainer.loadbalancer.server.port=9000
-        - traefik.http.routers.portainer.entrypoints=websecure
+        - traefik.http.routers.portainer.entryPoints=websecure
         - traefik.http.routers.portainer.rule=Host(`portainer.yje.kr`)
-        - traefik.http.routers.portainer.tls.certresolver=letsencrypt
+        - traefik.http.routers.portainer.tls.certResolver=letsencrypt
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
@@ -115,7 +116,6 @@ services:
   # 컨터이너 메트릭 데이터 수집
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
-    privileged: true
     deploy:
       mode: global
     labels:
@@ -181,9 +181,6 @@ services:
       - "15692:15692"
     env_file:
       - .env
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
     networks:
       - staging-network
     tty: true
@@ -228,8 +225,8 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.services.grafana.loadbalancer.server.port=3000
-        - traefik.http.routers.grafana.entrypoints=websecure
-        - traefik.http.routers.grafana.tls.certresolver=letsencrypt
+        - traefik.http.routers.grafana.entryPoints=websecure
+        - traefik.http.routers.grafana.tls.certResolver=letsencrypt
         - traefik.http.routers.grafana.rule=Host(`grafana.yje.kr`)
     volumes:
       - grafana_data:/var/lib/grafana
@@ -258,6 +255,9 @@ services:
       - "16686:16686"
       - "14250:14250"
       - "14268:14268"
+      - "14269:14269"
+      - "4319:4317"
+      - "4320:4318"
     volumes:
       - jaeger-data:/data
     depends_on:

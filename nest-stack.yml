@@ -35,7 +35,15 @@ services:
       - LOGGER_LEVEL=$LOGGER_LEVEL
       - PROJECT_NAME=$PROJECT_NAME
       - INDEX_API_URL=$INDEX_API_URL
+      - TRACING_AGENT_URL=$TRACING_AGENT_URL
     deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1GB
+        reservations:
+          cpus: "0.25"
+          memory: 256MB
       replicas: $SERVICE_REPLICAS
       placement:
         constraints:

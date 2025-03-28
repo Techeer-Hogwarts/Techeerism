@@ -1,0 +1,137 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    networks:
+      - search-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: search-container search-cron --interval 3600 --cleanup --include-stopped
+    labels:
+      - logging=promtail
+      - logging_jobname=watchtower
+  
+  search-conatiner:
+    image: suhach0523/techeerism-search:latest
+    container_name: search-container
+    networks:
+      - search-network
+    env_file:
+      - .env
+    environment:
+      - MEILISEARCH_ADDR=http://meilisearch:7700
+      - MEILISEARCH_KEY=${MEILISEARCH_API_KEY}
+      - GIN_MODE=release
+      - SWAGGER_USERNAME=${SWAGGER_USERNAME}
+      - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "8080:8080"
+    labels:
+      - logging=promtail
+      - logging_jobname=searchContainer
+
+  search-cron:
+    image: suhach0523/techeerism-cron:latest
+    container_name: search-cron
+    networks:
+      - search-network
+    env_file:
+      - .env
+    environment:
+      - MEILISEARCH_ADDR=http://meilisearch:7700
+      - MEILISEARCH_KEY=${MEILISEARCH_API_KEY}
+      - GIN_MODE=release
+      - SWAGGER_USERNAME=${SWAGGER_USERNAME}
+      - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_SSL_MODE=${DB_SSL_MODE}
+    ports:
+      - "8081:8081"
+    labels:
+      - logging=promtail
+      - logging_jobname=searchCron
+  
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: meilisearch
+    networks:
+      - search-network
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=${MEILISEARCH_API_KEY}
+      - MEILI_EXPERIMENTAL_ENABLE_METRICS=true
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_ENV=production
+    env_file:
+      - .env
+    volumes:
+      - meilisearch-data:/meili_data/data.ms
+    restart: unless-stopped
+  
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - search-network
+  
+  promtail:
+    image:  grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - ./promtail/config.yaml:/etc/promtail/docker-config.yaml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - -config.file=/etc/promtail/docker-config.yaml
+      - -config.expand-env=true
+    networks:
+      - search-network
+    ports:
+      - 9080:9080
+  
+  prometheus:
+    image: prom/prometheus:v2.45.6
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    env_file:
+      - .env
+    environment:
+      - MEILISEARCH_API_KEY=${MEILISEARCH_API_KEY}
+    networks:
+      - search-network
+  
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - search-network
+
+networks:
+  search-network:
+    driver: bridge
+
+volumes:
+  meilisearch-data:

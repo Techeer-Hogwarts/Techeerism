@@ -1,0 +1,73 @@
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.67.0
+    environment:
+      SPAN_STORAGE_TYPE: cassandra
+      CASSANDRA_SERVERS: scylla
+      CASSANDRA_KEYSPACE: jaeger_v1_test
+      CASSANDRA_PORT: 9042
+      CASSANDRA_CONSISTENCY: ONE
+    ports:
+      - "16686:16686"
+      - "14250:14250"
+      - "14268:14268"
+      - "14269:14269"
+      - "4319:4317"
+      - "4320:4318"
+    volumes:
+      - jaeger-data:/data
+    depends_on:
+      - scylla
+    restart: always
+    networks:
+      - tracing-network
+  
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.122.1
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./opentelemetry/otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - tracing-network
+    restart: always
+  
+  scylla:
+    image: scylladb/scylla:latest
+    command: --smp 2 --memory 6G --overprovisioned 1
+    ports:
+      - "9042:9042"
+      - "9180:9180"
+    volumes:
+      - scylla-data:/var/lib/scylla
+    networks:
+      - tracing-network
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "SELECT now() FROM system.local;"]
+      interval: 30s
+      retries: 5
+      start_period: 30s
+
+  jaeger-schema-init:
+    image: jaegertracing/jaeger-cassandra-schema:latest
+    environment:
+      CASSANDRA_PROTOCOL_VERSION: 4
+      CASSANDRA_VERSION: 4
+      CQLSH_HOST: scylla
+      DATACENTER: test
+      MODE: test
+    restart: on-failure
+    depends_on:
+      - scylla
+    networks:
+      - tracing-network
+
+volumes:
+  jaeger-data:
+  scylla-data:
+
+networks:
+  tracing-network:
+    driver: bridge

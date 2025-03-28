@@ -305,6 +305,7 @@ services:
     command: --smp 2 --memory 4G --overprovisioned 1
     ports:
       - "9042:9042"
+      - "9180:9180"
     volumes:
       - scylla-data:/var/lib/scylla
     deploy:

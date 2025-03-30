@@ -10,6 +10,7 @@ services:
       - RABBITMQ_USER=$RABBITMQ_DEFAULT_USER
       - RABBITMQ_PASSWORD=$RABBITMQ_DEFAULT_PASS
       - RABBITMQ_HOST=$RABBITMQ_HOST
+      - TRACING_GRPC=$TRACING_GRPC
     restart: always
     tty: true
     deploy:

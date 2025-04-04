@@ -44,7 +44,7 @@ services:
         monitor: 15s
         order: start-first
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 15s
 
 networks:

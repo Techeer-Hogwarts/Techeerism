@@ -11,7 +11,6 @@ services:
       - RABBITMQ_PASSWORD=$RABBITMQ_DEFAULT_PASS
       - RABBITMQ_HOST=$RABBITMQ_HOST
       - TRACING_GRPC=$TRACING_GRPC
-    restart: always
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
@@ -37,10 +36,10 @@ services:
         monitor: 15s
         order: start-first
       restart_policy:
-        condition: on-failure
+        condition: always
         delay: 5s
-        max_attempts: 10
-        window: 30s
+        max_attempts: 100
+        window: 6000s
 
 networks:
   main-network:

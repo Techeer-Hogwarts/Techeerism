@@ -37,7 +37,7 @@ services:
         order: start-first
       restart_policy:
         condition: any
-        delay: 5s
+        delay: 15s
 
 networks:
   main-network:

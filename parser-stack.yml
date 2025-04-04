@@ -45,7 +45,7 @@ services:
         order: start-first
       restart_policy:
         condition: on-failure
-        delay: 5s
+        delay: 15s
 
 networks:
   main-network:

@@ -44,10 +44,8 @@ services:
         monitor: 15s
         order: start-first
       restart_policy:
-        condition: always
+        condition: on-failure
         delay: 5s
-        max_attempts: 100
-        window: 6000s
 
 networks:
   main-network:

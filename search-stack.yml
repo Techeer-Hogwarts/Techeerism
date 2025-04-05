@@ -8,11 +8,11 @@ services:
       - .env
     environment:
       - MEILISEARCH_ADDR=http://meilisearch:7700
-      - MEILISEARCH_KEY=${MEILISEARCH_API_KEY}
+      # - MEILISEARCH_KEY=${MEILISEARCH_API_KEY}
       - GIN_MODE=release
-      - SWAGGER_USERNAME=${SWAGGER_USERNAME}
-      - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
-      - JWT_SECRET=${JWT_SECRET}
+      # - SWAGGER_USERNAME=${SWAGGER_USERNAME}
+      # - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
+      # - JWT_SECRET=${JWT_SECRET}
     ports:
       - "8082:8080"
     deploy:
@@ -40,16 +40,16 @@ services:
       - .env
     environment:
       - MEILISEARCH_ADDR=http://meilisearch:7700
-      - MEILISEARCH_KEY=${MEILISEARCH_API_KEY}
+      # - MEILISEARCH_KEY=${MEILISEARCH_API_KEY}
       - GIN_MODE=release
-      - SWAGGER_USERNAME=${SWAGGER_USERNAME}
-      - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_SSL_MODE=${DB_SSL_MODE}
+      # - SWAGGER_USERNAME=${SWAGGER_USERNAME}
+      # - SWAGGER_PASSWORD=${SWAGGER_PASSWORD}
+      # - DB_HOST=${DB_HOST}
+      # - DB_PORT=${DB_PORT}
+      # - DB_USER=${DB_USER}
+      # - DB_PASSWORD=${DB_PASSWORD}
+      # - DB_NAME=${DB_NAME}
+      # - DB_SSL_MODE=${DB_SSL_MODE}
     ports:
       - "8081:8081"
     deploy:
@@ -76,7 +76,7 @@ services:
     ports:
       - "7700:7700"
     environment:
-      - MEILI_MASTER_KEY=${MEILISEARCH_API_KEY}
+      # - MEILI_MASTER_KEY=${MEILISEARCH_API_KEY}
       - MEILI_EXPERIMENTAL_ENABLE_METRICS=true
       - MEILI_NO_ANALYTICS=true
       - MEILI_ENV=production

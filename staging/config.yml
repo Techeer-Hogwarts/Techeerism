@@ -2,7 +2,7 @@ http:
   routers:
     # External API
     search-api:
-      rule: "Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v2/search`)"
+      rule: "Host(`api.yje.kr`) && PathPrefix(`/api/v2/search`)"
       service: "search-api"
       entryPoints:
         - "websecure"

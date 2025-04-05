@@ -28,7 +28,7 @@ services:
         - traefik.enable=true
         - traefik.http.services.search.loadbalancer.server.port=8080
         - traefik.http.routers.search.entrypoints=websecure
-        - traefik.http.routers.search.rule=Host(`search.yje.kr`) && PathPrefix(`/api/v2`)
+        - traefik.http.routers.search.rule=Host(`api.yje.kr`) && PathPrefix(`/api/v2`)
         - traefik.http.routers.search.tls.certresolver=letsencrypt
   
   search-cron:

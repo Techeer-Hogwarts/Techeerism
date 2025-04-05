@@ -10,6 +10,9 @@ services:
       - "--providers.docker.exposedByDefault=false"
       - "--providers.swarm.network=staging-network"
       - "--providers.swarm.watch=true"
+      - "--providers.file.filename=/dynamic-config.yml"
+      - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
       - "--entryPoints.web.http.redirections.entrypoint.to=websecure"
       - "--entryPoints.web.http.redirections.entrypoint.scheme=https"
@@ -38,6 +41,10 @@ services:
       - "--tracing.serviceName=traefik"
       - "--tracing.sampleRate=1.0"
     ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
       - target: 443
         published: 443
         protocol: tcp
@@ -48,8 +55,11 @@ services:
         mode: host
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - ./traefik/config.yml:/dynamic-config.yml:ro
       - "traefik-certificates:/letsencrypt"  
       - "traefik_logs:/traefik/logs/"
+    environment:
+      - HOME_SERVER_URL=$HOME_SERVER_URL
     networks:
       - staging-network
     deploy:

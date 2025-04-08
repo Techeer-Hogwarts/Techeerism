@@ -35,6 +35,7 @@ services:
       - LOGGER_LEVEL=$LOGGER_LEVEL_STAGING
       - PROJECT_NAME=$PROJECT_NAME
       - INDEX_API_URL=$INDEX_API_URL_STAGING
+      - PROFILE_IMG_URL=$PROFILE_IMG_URL
     deploy:
       replicas: $SERVICE_REPLICAS
       resources:

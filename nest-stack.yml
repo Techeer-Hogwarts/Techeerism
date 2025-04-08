@@ -36,6 +36,7 @@ services:
       - PROJECT_NAME=$PROJECT_NAME
       - INDEX_API_URL=$INDEX_API_URL
       - TRACING_AGENT_URL=$TRACING_AGENT_URL
+      - PROFILE_IMG_URL=$PROFILE_IMG_URL
     deploy:
       resources:
         limits:

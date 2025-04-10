@@ -31,6 +31,13 @@ services:
       placement:
         constraints:
           - node.labels.instance == monitoring
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 1GB
+        reservations:
+          cpus: "0.25"
+          memory: 512MB
 
 volumes:
   grafana_data:

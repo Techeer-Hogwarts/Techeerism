@@ -26,7 +26,7 @@ http:
     search-api:
       loadBalancer:
         servers:
-          - url: "{{env "HOME_SERVER_URL"}}:8080"
+          - url: "{{env 'HOME_SERVER_URL'}}:8080"
     # notification-api:
     #   loadBalancer:
     #     servers:

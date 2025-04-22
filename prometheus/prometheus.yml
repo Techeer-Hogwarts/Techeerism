@@ -22,7 +22,11 @@ scrape_configs:
       # Use the prometheus-job Swarm label as Prometheus job label.
       - source_labels: [__meta_dockerswarm_container_label_prometheus_job]
         target_label: job
-
+        action: replace
+      # Use the node name as instance label.
+      - source_labels: [__meta_dockerswarm_node_hostname]
+        target_label: node_hostname
+        action: replace
         
   - job_name: docker
     static_configs:

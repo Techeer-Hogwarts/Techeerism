@@ -1,0 +1,80 @@
+services:
+  nest:
+    image: suhach0523/techeerism-spring:$IMAGE_TAG
+    networks:
+      - main-network
+    environment:
+      - DATABASE_URL=$DATABASE_URL
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - EMAIL_USER=$EMAIL_USER
+      - EMAIL_PASS=$EMAIL_PASS
+      - JWT_SECRET=$JWT_SECRET
+      - SLACK=$SLACK_SECRET
+      - RABBITMQ_HOST=$RABBITMQ_HOST
+      - RABBITMQ_DEFAULT_USER=$RABBITMQ_DEFAULT_USER
+      - RABBITMQ_DEFAULT_PASS=$RABBITMQ_DEFAULT_PASS
+      - SWAGGER_USER=$SWAGGER_USER
+      - SWAGGER_PASSWORD=$SWAGGER_PASSWORD
+      - AWS_S3_ACCESS_KEY=$AWS_S3_ACCESS_KEY
+      - AWS_S3_SECRET_ACCESS_KEY=$AWS_S3_SECRET_ACCESS_KEY
+      - AWS_S3_BUCKET_NAME=$AWS_S3_BUCKET_NAME
+      - AWS_REGION=$AWS_REGION
+      - REDIS_URL=$REDIS_URL
+      - GOOGLE_AUTH_TYPE=$GOOGLE_AUTH_TYPE
+      - GOOGLE_AUTH_PROJECT_ID=$GOOGLE_AUTH_PROJECT_ID
+      - GOOGLE_AUTH_PRIVATE_KEY_ID=$GOOGLE_AUTH_PRIVATE_KEY_ID
+      - GOOGLE_AUTH_PRIVATE_KEY=$GOOGLE_AUTH_PRIVATE_KEY
+      - GOOGLE_AUTH_CLIENT_EMAIL=$GOOGLE_AUTH_CLIENT_EMAIL
+      - GOOGLE_AUTH_CLIENT_ID=$GOOGLE_AUTH_CLIENT_ID
+      - GOOGLE_FOLDER_ID=$GOOGLE_FOLDER_ID
+      - ARCHIVE_FOLDER_ID=$ARCHIVE_FOLDER_ID
+      - RABBITMQ_URL=$RABBITMQ_URL
+      - SLACKBOT_URL=$SLACKBOT_URL
+      - SLACKBOT_PERSONAL_URL=$SLACKBOT_PERSONAL_URL
+      - LOGGER_LEVEL=$LOGGER_LEVEL
+      - PROJECT_NAME=$PROJECT_NAME
+      - INDEX_API_URL=$INDEX_API_URL
+      - TRACING_AGENT_URL=$TRACING_AGENT_URL
+      - PROFILE_IMG_URL=$PROFILE_IMG_URL
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1GB
+        reservations:
+          cpus: "0.25"
+          memory: 256MB
+      replicas: $SERVICE_REPLICAS
+      placement:
+        constraints:
+          - node.labels.instance == main
+      update_config:
+        parallelism: 1
+        delay: 5s
+        failure_action: rollback
+        monitor: 15s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+        monitor: 15s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 30s
+      labels:
+        - traefik.enable=true
+        - traefik.http.services.spring.loadbalancer.server.port=8080
+        - traefik.http.routers.spring.entrypoints=websecure
+        - traefik.http.routers.spring.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v3`)
+        - traefik.http.routers.spring.tls.certresolver=letsencrypt
+        - traefik.http.middlewares.ratelimit-middleware2.ratelimit.average=10
+        - traefik.http.middlewares.ratelimit-middleware2.ratelimit.burst=20
+        - traefik.http.routers.spring.middlewares=ratelimit-middleware2
+
+networks:
+  main-network:
+    external: true

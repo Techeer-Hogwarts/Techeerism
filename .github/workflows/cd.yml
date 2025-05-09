@@ -349,4 +349,3 @@ jobs:
           script: |
             rm -f /home/jungeun/nest-stack.yml
             rm -f /home/jungeun/spring-stack.yml
-            rm -f /home/jungeun/log_file.txt

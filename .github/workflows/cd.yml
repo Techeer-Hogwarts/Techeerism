@@ -339,14 +339,14 @@ jobs:
             rm -f /home/ubuntu/scale_crawler.sh
             rm -f /home/ubuntu/log_file.txt
 
-      # - name: Clean Up Files in Server Staging
-      #   if: ${{ github.event.inputs.environment == 'staging' }}
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SSH_HOST_STAGING }}
-      #     username: ${{ secrets.SSH_USERNAME_STAGING }}
-      #     key: ${{ secrets.SSH_PASSWORD_STAGING }}
-      #     script: |
-      #       rm -f /home/jungeun/nest-stack.yml
-      #       rm -f /home/jungeun/spring-stack.yml
-      #       rm -f /home/jungeun/log_file.txt
+      - name: Clean Up Files in Server Staging
+        if: ${{ github.event.inputs.environment == 'staging' }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_STAGING }}
+          username: ${{ secrets.SSH_USERNAME_STAGING }}
+          key: ${{ secrets.SSH_PASSWORD_STAGING }}
+          script: |
+            rm -f /home/jungeun/nest-stack.yml
+            rm -f /home/jungeun/spring-stack.yml
+            rm -f /home/jungeun/log_file.txt

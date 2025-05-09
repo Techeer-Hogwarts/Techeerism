@@ -1,5 +1,5 @@
 services:
-  nest:
+  spring:
     image: suhach0523/techeerism-spring:$IMAGE_TAG
     networks:
       - main-network

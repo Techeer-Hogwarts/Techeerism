@@ -1,5 +1,5 @@
 services:
-  nest:
+  spring:
     image: suhach0523/techeerism-spring:$IMAGE_TAG
     networks:
       - staging-network
@@ -63,13 +63,13 @@ services:
         window: 30s
       labels:
         - traefik.enable=true
-        - traefik.http.services.nest.loadbalancer.server.port=8000
-        - traefik.http.routers.nest.entryPoints=websecure
-        - traefik.http.routers.nest.rule=Host(`api.yje.kr`) && PathPrefix(`/api/v3`)
-        - traefik.http.routers.nest.tls.certResolver=letsencrypt
+        - traefik.http.services.spring.loadbalancer.server.port=8000
+        - traefik.http.routers.spring.entryPoints=websecure
+        - traefik.http.routers.spring.rule=Host(`api.yje.kr`) && PathPrefix(`/api/v3`)
+        - traefik.http.routers.spring.tls.certResolver=letsencrypt
         - traefik.http.middlewares.ratelimit-middleware2.ratelimit.average=10
         - traefik.http.middlewares.ratelimit-middleware2.ratelimit.burst=20
-        - traefik.http.routers.nest.middlewares=ratelimit-middleware2
+        - traefik.http.routers.spring.middlewares=ratelimit-middleware2
 
 networks:
   staging-network:

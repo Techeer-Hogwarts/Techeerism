@@ -164,6 +164,8 @@ jobs:
             export SERVICE_REPLICAS=${{ github.event.inputs.replicas }}
             export IMAGE_NAME=${{ github.event.inputs.image_name }}
             export DATABASE_URL=${{ secrets.DATABASE_URL_STAGING }}
+            export STAGING_POSTGRES_USER=${{ secrets.STAGING_POSTGRES_USER }}
+            export STAGING_POSTGRES_PASSWORD=${{ secrets.STAGING_POSTGRES_PASSWORD }}
             export REDIS_HOST=${{ secrets.REDIS_HOST }}
             export REDIS_PORT=${{ secrets.REDIS_PORT }}
             export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}

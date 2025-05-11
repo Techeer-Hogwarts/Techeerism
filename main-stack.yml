@@ -123,6 +123,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=15d'
       - '--storage.tsdb.retention.size=3GB'
+      - '--storage.tsdb.retention=15d'
     deploy:
       replicas: 1
       placement:

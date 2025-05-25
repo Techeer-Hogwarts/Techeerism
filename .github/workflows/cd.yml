@@ -79,6 +79,7 @@ jobs:
             export EMAIL_USER=${{ secrets.EMAIL_USER }}
             export EMAIL_PASS=${{ secrets.EMAIL_PASS }}
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export SPRING_JWT_SECRET=${{ secrets.SPRING_JWT_SECRET }}
             export SLACK_SECRET=${{ secrets.SLACK_DEPLOY_SECRET }}
             export RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
             export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
@@ -174,6 +175,7 @@ jobs:
             export EMAIL_USER=${{ secrets.EMAIL_USER }}
             export EMAIL_PASS=${{ secrets.EMAIL_PASS }}
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export SPRING_JWT_SECRET=${{ secrets.SPRING_JWT_SECRET }}
             export SLACK_SECRET=${{ secrets.SLACK_DEPLOY_SECRET }}
             export RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
             export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}

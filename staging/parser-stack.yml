@@ -1,10 +1,8 @@
 services:
-  crawler:
-    image: suhach0523/techeerism-crawler:$IMAGE_TAG
+  parser:
+    image: suhach0523/techeerism-parser:$IMAGE_TAG
     networks:
       - staging-network
-    env_file:
-      - .env
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
@@ -12,13 +10,25 @@ services:
       - RABBITMQ_USER=$RABBITMQ_DEFAULT_USER
       - RABBITMQ_PASSWORD=$RABBITMQ_DEFAULT_PASS
       - RABBITMQ_HOST=$RABBITMQ_HOST
-    # labels:
-    #   - logging=promtail
-    #   - logging_jobname=crawler
-    # restart: always
+      - SEARCH_API_URL=$SEARCH_API_URL_STAGING
+      - AI_HOST_URL=$AI_HOST_URL
+      - GOOGLE_AUTH_TYPE=$GOOGLE_AUTH_TYPE
+      - GOOGLE_AUTH_PROJECT_ID=$GOOGLE_AUTH_PROJECT_ID
+      - GOOGLE_AUTH_PRIVATE_KEY_ID=$GOOGLE_AUTH_PRIVATE_KEY_ID
+      - GOOGLE_AUTH_PRIVATE_KEY=$GOOGLE_AUTH_PRIVATE_KEY
+      - GOOGLE_AUTH_CLIENT_EMAIL=$GOOGLE_AUTH_CLIENT_EMAIL
+      - GOOGLE_AUTH_CLIENT_ID=$GOOGLE_AUTH_CLIENT_ID
+      - GOOGLE_AUTH_CLIENT_X509_CERT_URL=$GOOGLE_AUTH_CLIENT_X509_CERT_URL
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
+      resources:
+        limits:
+          cpus: "0.8"
+          memory: 800M
+        reservations:
+          cpus: "0.25"
+          memory: 100MB
       update_config:
         parallelism: 1
         delay: 10s

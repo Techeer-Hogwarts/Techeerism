@@ -44,7 +44,7 @@ jobs:
           key: ${{ secrets.SSH_PASSWORD }}
           source: spring-stack.yml, nest-stack.yml, parser-stack.yml, crawler-stack.yml, scale_nest.sh, scale_parser.sh, scale_crawler.sh
           target: /home/ubuntu/
-      
+
       - name: Copy file to Server Staging
         if: ${{ github.event.inputs.environment == 'staging' }}
         id: copy-staging
@@ -112,6 +112,8 @@ jobs:
             export TRACING_AGENT_URL=${{ secrets.TRACING_AGENT_URL }}
             export TRACING_GRPC=${{ secrets.TRACING_GRPC }}
             export PROFILE_IMG_URL=${{ secrets.PROFILE_IMG_URL }}
+            export HTTPS_SERVER_URL=${{ secrets.HTTPS_SERVER_URL }}
+            export STAGING_SERVER_URL=${{ secrets.STAGING_SERVER_URL }}
 
             if [ "$SERVICE_REPLICAS" == "1" ]; then
               export SERVICE_REPLICAS="2"
@@ -253,7 +255,7 @@ jobs:
               echo "Invalid image name"
               exit 1
             fi
-      
+
       - name: Scale Down if Needed Staging
         if: ${{ github.event.inputs.replicas == '1' && github.event.inputs.environment != 'production' }}
         id: scale_down-staging

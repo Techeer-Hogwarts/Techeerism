@@ -93,7 +93,7 @@ services:
       replicas: 1
       labels:
         - traefik.enable=true
-        - "traefik.constraint-label=staging-stack"
+        - traefik.constraint-label=staging-stack
         - traefik.http.services.portainer.loadbalancer.server.port=9000
         - traefik.http.routers.portainer.entryPoints=websecure
         - traefik.http.routers.portainer.rule=Host(`portainer.yje.kr`)
@@ -268,7 +268,7 @@ services:
       replicas: 1
       labels:
         - traefik.enable=true
-        - "traefik.constraint-label=staging-stack"
+        - traefik.constraint-label=staging-stack
         - traefik.http.services.grafana.loadbalancer.server.port=3000
         - traefik.http.routers.grafana.entryPoints=websecure
         - traefik.http.routers.grafana.tls.certResolver=letsencrypt

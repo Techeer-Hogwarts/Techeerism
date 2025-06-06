@@ -66,7 +66,7 @@ services:
         window: 30s
       labels:
         - traefik.enable=true
-        - "traefik.constraint-label=staging-stack"
+        - traefik.constraint-label=staging-stack
         - traefik.http.services.nest.loadbalancer.server.port=8000
         - traefik.http.routers.nest.entryPoints=websecure
         - traefik.http.routers.nest.rule=Host(`api.yje.kr`) && PathPrefix(`/api/v1`)

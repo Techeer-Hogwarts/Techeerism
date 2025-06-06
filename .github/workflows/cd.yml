@@ -39,10 +39,10 @@ jobs:
         id: copy
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PASSWORD }}
-          source: spring-stack.yml, nest-stack.yml, parser-stack.yml, crawler-stack.yml, scale_nest.sh, scale_parser.sh, scale_crawler.sh
+          host: ${{ secrets.SSH_HOST_STAGING }}
+          username: ${{ secrets.SSH_USERNAME_STAGING }}
+          key: ${{ secrets.SSH_PASSWORD_STAGING }}
+          source: spring-stack.yml, nest-stack.yml, parser-stack.yml, crawler-stack.yml
           target: /home/ubuntu/
 
       - name: Copy file to Server Staging
@@ -62,9 +62,9 @@ jobs:
         if: ${{ github.event.inputs.environment == 'production' }}
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PASSWORD }}
+          host: ${{ secrets.SSH_HOST_STAGING }}
+          username: ${{ secrets.SSH_USERNAME_STAGING }}
+          key: ${{ secrets.SSH_PASSWORD_STAGING }}
           capture_stdout: "true"
           script: |
             LOG_FILE="log_file.txt"
@@ -103,7 +103,6 @@ jobs:
             export ARCHIVE_FOLDER_ID=${{ secrets.ARCHIVE_FOLDER_ID }}
             export SLACKBOT_URL=${{ secrets.SLACKBOT_URL }}
             export SLACKBOT_PERSONAL_URL=${{ secrets.SLACKBOT_PERSONAL_URL }}
-            export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
             export PROJECT_NAME=${{ secrets.PROJECT_NAME }}
             export LOGGER_LEVEL=${{ secrets.LOGGER_LEVEL }}
             export INDEX_API_URL=${{ secrets.INDEX_API_URL }}
@@ -200,7 +199,6 @@ jobs:
             export ARCHIVE_FOLDER_ID=${{ secrets.ARCHIVE_FOLDER_ID }}
             export SLACKBOT_URL=${{ secrets.SLACKBOT_URL }}
             export SLACKBOT_PERSONAL_URL=${{ secrets.SLACKBOT_PERSONAL_URL }}
-            export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
             export PROJECT_NAME=${{ secrets.PROJECT_NAME }}
             export LOGGER_LEVEL=${{ secrets.LOGGER_LEVEL_STAGING }}
             export INDEX_API_URL=${{ secrets.INDEX_API_URL_STAGING }}
@@ -223,67 +221,67 @@ jobs:
               exit 1
             fi
 
-      - name: Scale Down if Needed Prod
-        if: ${{ github.event.inputs.replicas == '1' && github.event.inputs.environment == 'production'}}
-        id: scale_down
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PASSWORD }}
-          capture_stdout: "true"
-          script: |
-            LOG_FILE="log_file.txt"
-            export IMAGE_NAME=${{ github.event.inputs.image_name }}
-            if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
-              echo "Scaling Down Nest" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
-              /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
-            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
-              echo "Scaling Down Parser" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
-              /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
-            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
-              echo "Scaling Down Crawler" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale_crawler.sh | tee -a $LOG_FILE
-              /home/ubuntu/scale_crawler.sh | tee -a $LOG_FILE
-            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-spring" ]; then
-              echo "Scaling Down Spring" | tee -a $LOG_FILE
-              chmod +x /home/ubuntu/scale_spring.sh | tee -a $LOG_FILE
-              /home/ubuntu/scale_spring.sh | tee -a $LOG_FILE
-            else
-              echo "Invalid image name"
-              exit 1
-            fi
+      # - name: Scale Down if Needed Prod
+      #   if: ${{ github.event.inputs.replicas == '1' && github.event.inputs.environment == 'production'}}
+      #   id: scale_down
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USERNAME }}
+      #     key: ${{ secrets.SSH_PASSWORD }}
+      #     capture_stdout: "true"
+      #     script: |
+      #       LOG_FILE="log_file.txt"
+      #       export IMAGE_NAME=${{ github.event.inputs.image_name }}
+      #       if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
+      #         echo "Scaling Down Nest" | tee -a $LOG_FILE
+      #         chmod +x /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
+      #         /home/ubuntu/scale_nest.sh | tee -a $LOG_FILE
+      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
+      #         echo "Scaling Down Parser" | tee -a $LOG_FILE
+      #         chmod +x /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
+      #         /home/ubuntu/scale_parser.sh | tee -a $LOG_FILE
+      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
+      #         echo "Scaling Down Crawler" | tee -a $LOG_FILE
+      #         chmod +x /home/ubuntu/scale_crawler.sh | tee -a $LOG_FILE
+      #         /home/ubuntu/scale_crawler.sh | tee -a $LOG_FILE
+      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-spring" ]; then
+      #         echo "Scaling Down Spring" | tee -a $LOG_FILE
+      #         chmod +x /home/ubuntu/scale_spring.sh | tee -a $LOG_FILE
+      #         /home/ubuntu/scale_spring.sh | tee -a $LOG_FILE
+      #       else
+      #         echo "Invalid image name"
+      #         exit 1
+      #       fi
 
-      - name: Scale Down if Needed Staging
-        if: ${{ github.event.inputs.replicas == '1' && github.event.inputs.environment != 'production' }}
-        id: scale_down-staging
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST_STAGING }}
-          username: ${{ secrets.SSH_USERNAME_STAGING }}
-          key: ${{ secrets.SSH_PASSWORD_STAGING }}
-          capture_stdout: "true"
-          script: |
-            LOG_FILE="log_file.txt"
-            export IMAGE_NAME=${{ github.event.inputs.image_name }}
-            if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
-              echo "Scaling Down Nest" | tee -a $LOG_FILE
-              timeout 60s docker service scale techeerzip_staging_nest=1 | tee -a $LOG_FILE
-            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-spring" ]; then
-              echo "Scaling Down Spring" | tee -a $LOG_FILE
-              timeout 60s docker service scale techeerzip_staging_spring=1 | tee -a $LOG_FILE
-            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
-              echo "Scaling Down Parser" | tee -a $LOG_FILE
-              timeout 60s docker service scale techeerzip_staging_parser=1 | tee -a $LOG_FILE
-            elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
-              echo "Scaling Down Crawler" | tee -a $LOG_FILE
-              timeout 60s docker service scale techeerzip_staging_crawler=1 | tee -a $LOG_FILE
-            else
-              echo "Invalid image name" | tee -a $LOG_FILE
-              exit 1
-            fi
+      # - name: Scale Down if Needed Staging
+      #   if: ${{ github.event.inputs.replicas == '1' && github.event.inputs.environment != 'production' }}
+      #   id: scale_down-staging
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SSH_HOST_STAGING }}
+      #     username: ${{ secrets.SSH_USERNAME_STAGING }}
+      #     key: ${{ secrets.SSH_PASSWORD_STAGING }}
+      #     capture_stdout: "true"
+      #     script: |
+      #       LOG_FILE="log_file.txt"
+      #       export IMAGE_NAME=${{ github.event.inputs.image_name }}
+      #       if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
+      #         echo "Scaling Down Nest" | tee -a $LOG_FILE
+      #         timeout 60s docker service scale techeerzip_staging_nest=1 | tee -a $LOG_FILE
+      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-spring" ]; then
+      #         echo "Scaling Down Spring" | tee -a $LOG_FILE
+      #         timeout 60s docker service scale techeerzip_staging_spring=1 | tee -a $LOG_FILE
+      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-parser" ]; then
+      #         echo "Scaling Down Parser" | tee -a $LOG_FILE
+      #         timeout 60s docker service scale techeerzip_staging_parser=1 | tee -a $LOG_FILE
+      #       elif [ "$IMAGE_NAME" == "suhach0523/techeerism-crawler" ]; then
+      #         echo "Scaling Down Crawler" | tee -a $LOG_FILE
+      #         timeout 60s docker service scale techeerzip_staging_crawler=1 | tee -a $LOG_FILE
+      #       else
+      #         echo "Invalid image name" | tee -a $LOG_FILE
+      #         exit 1
+      #       fi
 
       - name: Save Logs To File
         if: always()
@@ -349,11 +347,6 @@ jobs:
             rm -f /home/ubuntu/parser-stack.yml
             rm -f /home/ubuntu/crawler-stack.yml
             rm -f /home/ubuntu/spring-stack.yml
-            rm -f /home/ubuntu/scale_spring.sh
-            rm -f /home/ubuntu/scale_nest.sh
-            rm -f /home/ubuntu/scale_parser.sh
-            rm -f /home/ubuntu/scale_crawler.sh
-            rm -f /home/ubuntu/log_file.txt
 
       - name: Clean Up Files in Server Staging
         if: ${{ github.event.inputs.environment == 'staging' }}

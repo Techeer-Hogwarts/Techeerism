@@ -19,6 +19,9 @@ services:
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
+      placement:
+        constraints:
+          - node.labels.instance == staging
       update_config:
         parallelism: 1
         delay: 10s

@@ -24,7 +24,7 @@ services:
       replicas: $SERVICE_REPLICAS
       placement:
         constraints:
-          - node.labels.instance == parser
+          - node.labels.instance == oracle2
       resources:
         limits:
           cpus: "0.8"

@@ -22,6 +22,9 @@ services:
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
+      placement:
+        constraints:
+          - node.labels.instance == oracle2
       resources:
         limits:
           cpus: "0.8"

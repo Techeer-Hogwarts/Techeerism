@@ -1,29 +1,30 @@
 services:
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.instance == monitoring
-      labels:
-        - traefik.enable=true
-        - traefik.http.services.grafana.loadbalancer.server.port=3000
-        - traefik.http.routers.grafana.entrypoints=websecure
-        - traefik.http.routers.grafana.tls.certresolver=letsencrypt
-        - traefik.http.routers.grafana.rule=Host(`grafana.techeerzip.cloud`)
-    volumes:
-      - grafana_data:/var/lib/grafana
-    networks:
-      - main-network
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   ports:
+  #     - "3000:3000"
+  #   deploy:
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.instance == monitoring
+  #     labels:
+  #       - traefik.enable=true
+  #       - traefik.http.services.grafana.loadbalancer.server.port=3000
+  #       - traefik.http.routers.grafana.entrypoints=websecure
+  #       - traefik.http.routers.grafana.tls.certresolver=letsencrypt
+  #       - traefik.http.routers.grafana.rule=Host(`grafana.techeerzip.cloud`)
+  #   volumes:
+  #     - grafana_data:/var/lib/grafana
+  #   networks:
+  #     - main-network
   
   loki:
     image: grafana/loki:latest
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - main-network
+      - staging-network
     ports:
       - "3100:3100"
     deploy:
@@ -39,9 +40,11 @@ services:
           cpus: "0.25"
           memory: 512MB
 
-volumes:
-  grafana_data:
+# volumes:
+#   grafana_data:
 
 networks:
   main-network:
+    external: true
+  staging-network:
     external: true

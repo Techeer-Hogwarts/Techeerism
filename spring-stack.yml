@@ -53,7 +53,7 @@ services:
       replicas: $SERVICE_REPLICAS
       placement:
         constraints:
-          - node.labels.instance == main
+          - node.labels.instance == staging
       update_config:
         parallelism: 1
         delay: 5s

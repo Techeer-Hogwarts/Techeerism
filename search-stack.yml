@@ -17,6 +17,9 @@ services:
       - "8082:8080"
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == staging
       resources:
         limits:
           cpus: '1'
@@ -54,6 +57,9 @@ services:
       - "8081:8081"
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == staging
       resources:
         limits:
           cpus: '1'
@@ -85,9 +91,12 @@ services:
     volumes:
       - meilisearch-data:/meili_data/data.ms
     restart: unless-stopped
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.instance == staging
   
-
-
 networks:
   staging-network:
     external: true

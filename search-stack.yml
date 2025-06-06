@@ -29,6 +29,7 @@ services:
           memory: 100MB
       labels:
         - traefik.enable=true
+        - "traefik.constraint-label=staging-stack"
         - traefik.http.services.search.loadbalancer.server.port=8080
         - traefik.http.routers.search.entrypoints=websecure
         - traefik.http.routers.search.rule=Host(`api.yje.kr`) && PathPrefix(`/api/v2`)

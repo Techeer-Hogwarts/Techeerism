@@ -69,6 +69,7 @@ services:
           memory: 100MB
       labels:
         - traefik.enable=true
+        - "traefik.constraint-label=staging-stack"
         - traefik.http.services.search-cron.loadbalancer.server.port=8081
         - traefik.http.routers.search-cron.entrypoints=websecure
         - traefik.http.routers.search-cron.rule=Host(`search.yje.kr`) && PathPrefix(`/api/v1`)

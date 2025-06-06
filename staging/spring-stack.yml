@@ -71,6 +71,7 @@ services:
         window: 30s
       labels:
         - traefik.enable=true
+        - "traefik.constraint-label=staging-stack"
         - traefik.http.services.spring.loadbalancer.server.port=8000
         - traefik.http.routers.spring.entryPoints=websecure
         - traefik.http.routers.spring.rule=Host(`api.yje.kr`) && PathPrefix(`/api/v3`)

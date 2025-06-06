@@ -12,6 +12,7 @@ services:
       - "--providers.swarm.watch=true"
       - "--providers.file.filename=/dynamic-config.yml"
       - "--providers.file.watch=true"
+      - "--providers.swarm.constraints=Label(`traefik.constraint-label`,`staging-stack`)"
       - "--entrypoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
       - "--entryPoints.web.http.redirections.entrypoint.to=websecure"
@@ -69,6 +70,7 @@ services:
       replicas: 1
       labels:
         - "traefik.enable=true"
+        - "traefik.constraint-label=staging-stack"
         - "traefik.http.routers.mydashboard.rule=Host(`traefik.yje.kr`)"
         - 'traefik.http.routers.mydashboard.entryPoints=websecure'
         - "traefik.http.routers.mydashboard.service=api@internal"
@@ -91,6 +93,7 @@ services:
       replicas: 1
       labels:
         - traefik.enable=true
+        - "traefik.constraint-label=staging-stack"
         - traefik.http.services.portainer.loadbalancer.server.port=9000
         - traefik.http.routers.portainer.entryPoints=websecure
         - traefik.http.routers.portainer.rule=Host(`portainer.yje.kr`)
@@ -265,6 +268,7 @@ services:
       replicas: 1
       labels:
         - traefik.enable=true
+        - "traefik.constraint-label=staging-stack"
         - traefik.http.services.grafana.loadbalancer.server.port=3000
         - traefik.http.routers.grafana.entryPoints=websecure
         - traefik.http.routers.grafana.tls.certResolver=letsencrypt

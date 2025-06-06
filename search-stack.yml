@@ -69,13 +69,13 @@ services:
           memory: 100MB
       labels:
         - traefik.enable=true
-        - traefik.http.services.search-cron.loadbalancer.server.port=8080
+        - traefik.http.services.search-cron.loadbalancer.server.port=8081
         - traefik.http.routers.search-cron.entrypoints=websecure
         - traefik.http.routers.search-cron.rule=Host(`search.yje.kr`) && PathPrefix(`/api/v1`)
         - traefik.http.routers.search-cron.tls.certresolver=letsencrypt
   
   meilisearch:
-    image: getmeili/meilisearch:latest
+    image: getmeili/meilisearch:v1.13.3
     container_name: meilisearch
     networks:
       - staging-network

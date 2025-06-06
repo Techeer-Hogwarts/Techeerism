@@ -38,6 +38,9 @@ services:
       - PROFILE_IMG_URL=$PROFILE_IMG_URL
     deploy:
       replicas: $SERVICE_REPLICAS
+      placement:
+        constraints:
+          - node.labels.instance == staging
       resources:
         limits:
           cpus: "1"

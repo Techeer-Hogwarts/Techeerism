@@ -15,6 +15,9 @@ services:
     networks:
       - staging-network
     deploy:
+      placement:
+        constraints:
+          - node.labels.instance == staging
       resources:
         limits:
           cpus: '1.8'

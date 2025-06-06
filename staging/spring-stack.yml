@@ -43,6 +43,9 @@ services:
       - STAGING_SERVER_URL=$STAGING_SERVER_URL
     deploy:
       replicas: $SERVICE_REPLICAS
+      placement:
+        constraints:
+          - node.labels.instance == staging
       resources:
         limits:
           cpus: "1"

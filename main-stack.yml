@@ -67,13 +67,13 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.constraint-label=main-stack"
-        - "traefik.http.routers.mydashboard.rule=Host(`traefik.techeerzip.cloud`)"
-        - 'traefik.http.routers.mydashboard.entrypoints=websecure'
-        - "traefik.http.routers.mydashboard.service=api@internal"
-        - "traefik.http.routers.mydashboard.tls.certresolver=letsencrypt"
-        - "traefik.http.services.mydashboard.loadbalancer.server.port=8090"
-        - "traefik.http.routers.mydashboard.middlewares=auth"
-        - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$6dXZ/kXf$$8KlXA1NQ5MfJDOyLveifr1"
+        - "traefik.http.routers.maindashboard.rule=Host(`traefik.techeerzip.cloud`)"
+        - 'traefik.http.routers.maindashboard.entrypoints=websecure'
+        - "traefik.http.routers.maindashboard.service=api@internal"
+        - "traefik.http.routers.maindashboard.tls.certresolver=letsencrypt"
+        - "traefik.http.services.maindashboard.loadbalancer.server.port=8090"
+        - "traefik.http.routers.maindashboard.middlewares=auth-main"
+        - "traefik.http.middlewares.auth-main.basicauth.users=admin:$$apr1$$6dXZ/kXf$$8KlXA1NQ5MfJDOyLveifr1"
 
   # 전체 관리자 페이지
   # portainer:

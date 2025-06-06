@@ -19,19 +19,19 @@ services:
   #   networks:
   #     - main-network
   
-  loki:
+  loki-main:
     image: grafana/loki:latest
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - main-network
       - staging-network
-    ports:
-      - "3100:3100"
+    # ports:
+    #   - "3100:3100"
     deploy:
       replicas: 1
       placement:
         constraints:
-          - node.labels.instance == monitoring
+          - node.labels.instance == staging
       resources:
         limits:
           cpus: "0.5"

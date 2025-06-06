@@ -1,6 +1,6 @@
 services:
   # 로드밸런싱 및 리버스 프록시 & HTTPS 설정
-  traefik:
+  traefik-main:
     image: traefik:v3.3
     command:
       - "--api.insecure=false"
@@ -8,7 +8,7 @@ services:
       - "--providers.swarm=true"
       - "--providers.swarm.exposedByDefault=false"
       - "--providers.docker.exposedByDefault=false"
-      - "--providers.swarm.network=staging-network"
+      - "--providers.swarm.network=main-network"
       - "--providers.swarm.watch=true"
       - "--providers.file.filename=/dynamic-config.yml"
       - "--providers.file.watch=true"
@@ -115,7 +115,7 @@ services:
   #         - node.platform.os == linux
 
   # 모니터링 메트릭 데이터 수집
-  prometheus:
+  prometheus-main:
     image: prom/prometheus:latest
     ports:
       - "9091:9090"
@@ -183,11 +183,11 @@ services:
   #     - prometheus-job=node-exporter
 
   # 로그 수집
-  promtail:
+  promtail-main:
     image:  grafana/promtail:latest
     volumes:
       # - ./promtail/config.yaml:/etc/promtail/docker-config.yaml\
-      - ./promtail:/etc/promtail/
+      - /home/ubuntu/promtail:/etc/promtail/
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -206,10 +206,10 @@ services:
       replicas: 1
       placement:
         constraints:
-          - node.labels.instance == staging
+          - node.labels.instance == oracle1
   
   # 레디스 & 레빗MQ
-  rabbitmq:
+  rabbitmq-main:
     image: "rabbitmq:3-management"
     ports:
       - "5673:5672"
@@ -227,7 +227,7 @@ services:
         constraints:
           - node.labels.instance == staging
 
-  redis:
+  redis-main:
     image: "redis:alpine"
     ports:
       - "6378:6379"

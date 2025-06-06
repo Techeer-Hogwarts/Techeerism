@@ -38,7 +38,7 @@ services:
       - "--tracing=true"
       - "--tracing.otlp=true"
       - "--tracing.otlp.grpc.insecure=true"
-      - "--tracing.otlp.grpc.endpoint=100.116.150.4:4317"
+      - "--tracing.otlp.grpc.endpoint=http://100.116.150.4:4317"
       - "--tracing.serviceName=traefik"
       - "--tracing.sampleRate=1.0"
     ports:

@@ -203,6 +203,8 @@ jobs:
             export LOGGER_LEVEL=${{ secrets.LOGGER_LEVEL_STAGING }}
             export INDEX_API_URL=${{ secrets.INDEX_API_URL_STAGING }}
             export PROFILE_IMG_URL=${{ secrets.PROFILE_IMG_URL }}
+            export HTTPS_SERVER_URL=${{ secrets.HTTPS_SERVER_URL }}
+            export STAGING_SERVER_URL=${{ secrets.STAGING_SERVER_URL }}
 
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
               echo "Deploying Nest Stack..." | tee -a $LOG_FILE

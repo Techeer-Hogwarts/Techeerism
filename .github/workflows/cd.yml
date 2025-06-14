@@ -299,6 +299,7 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           SLACK_SECRET: ${{ secrets.SLACK_DEPLOY_SECRET }}
           ENVIRONMENT: ${{ github.event.inputs.environment }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
         run: |
           FAILED_STEP=""
           if grep -q "task: non-zero exit (1)" log_file.txt; then
@@ -311,6 +312,7 @@ jobs:
             echo "The step '$FAILED_STEP' failed."
             curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \
                   -H "Content-Type: application/json" \
+                  -H "X-API-Key: $X_API_KEY" \
                   -d '{
                         "status": "failed",
                         "imageName": "'"$IMAGE_NAME"'",
@@ -325,6 +327,7 @@ jobs:
             echo "All steps succeeded!"
             curl -X POST https://techeer-029051b54345.herokuapp.com/api/v1/deploy/status \
                   -H "Content-Type: application/json" \
+                  -H "X-API-Key: $X_API_KEY" \
                   -d '{
                         "status": "success",
                         "imageName": "'"$IMAGE_NAME"'",

@@ -24,7 +24,7 @@ services:
       replicas: $SERVICE_REPLICAS
       placement:
         constraints:
-          - node.labels.instance == oracle2
+          - node.labels.instance == staging
       resources:
         limits:
           cpus: "0.8"

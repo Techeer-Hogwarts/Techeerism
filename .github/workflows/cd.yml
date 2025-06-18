@@ -73,6 +73,8 @@ jobs:
             export IMAGE_NAME=${{ github.event.inputs.image_name }}
             export DATABASE_URL=${{ secrets.DATABASE_URL }}
             export DATABASE_URL_SPRING=${{ secrets.DATABASE_URL_SPRING }}
+            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             export REDIS_HOST=${{ secrets.REDIS_HOST_MAIN }}
             export REDIS_PORT=${{ secrets.REDIS_PORT }}
             export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}

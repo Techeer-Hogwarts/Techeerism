@@ -72,6 +72,7 @@ services:
         window: 30s
       labels:
         - traefik.enable=true
+        - "traefik.constraint-label=main-stack"
         - traefik.http.services.spring-main.loadbalancer.server.port=8000
         - traefik.http.routers.spring-main.entrypoints=websecure
         - traefik.http.routers.spring-main.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v3`)

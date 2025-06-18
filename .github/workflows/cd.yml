@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME_STAGING }}
           key: ${{ secrets.SSH_PASSWORD_STAGING }}
           source: spring-stack.yml, nest-stack.yml, parser-stack.yml, crawler-stack.yml
-          target: /home/ubuntu/
+          target: /home/jungeun/
 
       - name: Copy file to Server Staging
         if: ${{ github.event.inputs.environment == 'staging' }}
@@ -73,7 +73,7 @@ jobs:
             export IMAGE_NAME=${{ github.event.inputs.image_name }}
             export DATABASE_URL=${{ secrets.DATABASE_URL }}
             export DATABASE_URL_SPRING=${{ secrets.DATABASE_URL_SPRING }}
-            export REDIS_HOST=${{ secrets.REDIS_HOST }}
+            export REDIS_HOST=${{ secrets.REDIS_HOST_MAIN }}
             export REDIS_PORT=${{ secrets.REDIS_PORT }}
             export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
             export EMAIL_USER=${{ secrets.EMAIL_USER }}
@@ -81,7 +81,7 @@ jobs:
             export JWT_SECRET=${{ secrets.JWT_SECRET }}
             export SPRING_JWT_SECRET=${{ secrets.SPRING_JWT_SECRET }}
             export SLACK_SECRET=${{ secrets.SLACK_DEPLOY_SECRET }}
-            export RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
+            export RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST_MAIN }}
             export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
             export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
             export SWAGGER_USER=${{ secrets.SWAGGER_USER }}
@@ -90,8 +90,8 @@ jobs:
             export AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
             export AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
             export AWS_REGION=${{ secrets.AWS_REGION }}
-            export REDIS_URL=${{ secrets.REDIS_URL }}
-            export RABBITMQ_URL=${{ secrets.RABBITMQ_URL }}
+            export REDIS_URL=${{ secrets.REDIS_URL_MAIN }}
+            export RABBITMQ_URL=${{ secrets.RABBITMQ_URL_MAIN }}
             export GOOGLE_AUTH_TYPE=${{ secrets.GOOGLE_AUTH_TYPE }}
             export GOOGLE_AUTH_PROJECT_ID=${{ secrets.GOOGLE_AUTH_PROJECT_ID }}
             export GOOGLE_AUTH_PRIVATE_KEY_ID=${{ secrets.GOOGLE_AUTH_PRIVATE_KEY_ID }}

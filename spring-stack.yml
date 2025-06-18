@@ -40,8 +40,8 @@ services:
       - INDEX_API_URL=$INDEX_API_URL
       - TRACING_AGENT_URL=$TRACING_AGENT_URL
       - PROFILE_IMG_URL=$PROFILE_IMG_URL
-      - HTTPS_SERVER_URL=$HTTPS_SERVER_URL
-      - STAGING_SERVER_URL=$STAGING_SERVER_URL
+      - HTTPS_SERVER_URL=$HTTPS_SERVER_URL # for swagger
+      - STAGING_SERVER_URL=$STAGING_SERVER_URL #for swagger
     deploy:
       resources:
         limits:

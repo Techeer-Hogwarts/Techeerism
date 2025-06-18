@@ -42,6 +42,7 @@ services:
       - PROFILE_IMG_URL=$PROFILE_IMG_URL
       - HTTPS_SERVER_URL=$HTTPS_SERVER_URL # for swagger
       - STAGING_SERVER_URL=$STAGING_SERVER_URL #for swagger
+      - TRACING_GRPC=TRACING_GRPC_SPRING
     deploy:
       resources:
         limits:

@@ -1,5 +1,5 @@
 services:
-  postgresql-spring:
+  postgresql:
     image: postgres:14-alpine3.20
     environment:
       POSTGRES_USER: ${POSTGRES_USER}

@@ -46,11 +46,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1"
-          memory: 1GB
+          cpus: "2"
+          memory: 2GB
         reservations:
-          cpus: "0.25"
-          memory: 256MB
+          cpus: "1"
+          memory: 512MB
       replicas: $SERVICE_REPLICAS
       placement:
         constraints:

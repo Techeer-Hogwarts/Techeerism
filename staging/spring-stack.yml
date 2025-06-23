@@ -42,6 +42,7 @@ services:
       - HTTPS_SERVER_URL=$HTTPS_SERVER_URL
       - STAGING_SERVER_URL=$STAGING_SERVER_URL
       - TRACING_GRPC=$TRACING_GRPC_SPRING
+      - X_API_KEY=$X_API_KEY
     deploy:
       replicas: $SERVICE_REPLICAS
       placement:

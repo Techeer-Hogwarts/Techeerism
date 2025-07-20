@@ -49,7 +49,6 @@ services:
       - OTEL_METRICS_EXPORTER=none
       - OTEL_LOGS_EXPORTER=none
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - X_API_KEY=$X_API_KEY
     deploy:
       replicas: $SERVICE_REPLICAS

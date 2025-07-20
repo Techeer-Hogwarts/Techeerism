@@ -43,6 +43,11 @@ services:
       - HTTPS_SERVER_URL=$HTTPS_SERVER_URL # for swagger
       - STAGING_SERVER_URL=$STAGING_SERVER_URL #for swagger
       - OTEL_EXPORTER_OTLP_ENDPOINT=$TRACING_GRPC_SPRING
+      - OTEL_SERVICE_NAME=techeerzip-spring
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOGS_EXPORTER=none
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - X_API_KEY=$X_API_KEY
     deploy:
       resources:

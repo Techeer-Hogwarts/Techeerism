@@ -3,6 +3,8 @@ services:
     image: suhach0523/techeerism-spring:$IMAGE_TAG
     networks:
       - staging-network
+    ports:
+      - "8010:8000"
     environment:
       - DATABASE_URL=$DATABASE_URL_SPRING
       - POSTGRES_USERNAME=$STAGING_POSTGRES_USER
@@ -41,6 +43,7 @@ services:
       - PROFILE_IMG_URL=$PROFILE_IMG_URL
       - HTTPS_SERVER_URL=$HTTPS_SERVER_URL
       - STAGING_SERVER_URL=$STAGING_SERVER_URL
+<<<<<<< HEAD
       - TRACING_GRPC=TRACING_GRPC_SPRING
       - ZOOM_API_ACCOUNT_ID=$ZOOM_API_ACCOUNT_ID
       - ZOOM_API_CLIENT_ID=$ZOOM_API_CLIENT_ID
@@ -48,6 +51,15 @@ services:
       - ZOOM_WEBHOOK_SECRET=$ZOOM_WEBHOOK_SECRET
       - ZOOM_WEBHOOK_VERIFICATION_TOKEN=$ZOOM_WEBHOOK_VERIFICATION_TOKEN
       - ZOOM_DEFAULT_MEETING_ID=$ZOOM_DEFAULT_MEETING_ID
+=======
+      - OTEL_EXPORTER_OTLP_ENDPOINT=$TRACING_GRPC_SPRING
+      - OTEL_SERVICE_NAME=techeerzip-spring
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOGS_EXPORTER=none
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - X_API_KEY=$X_API_KEY
+>>>>>>> origin/main
     deploy:
       replicas: $SERVICE_REPLICAS
       placement:

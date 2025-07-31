@@ -1,0 +1,49 @@
+services:
+  postgresql:
+    image: postgres:14-alpine3.20
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - main-db-data-spring:/var/lib/postgresql/data
+      - ./backup/:/backup/
+    ports:
+      - "5432:5432"
+    networks:
+      - main-network
+    deploy:
+      placement:
+        constraints:
+          - node.labels.instance == staging
+      resources:
+        limits:
+          cpus: '1.8'
+          memory: 1.8GB
+        reservations:
+          cpus: '0.1'
+          memory: 500MB
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+        failure_action: rollback
+        monitor: 15s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+        monitor: 15s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 600s
+
+volumes:
+  main-db-data-spring:
+
+networks:
+  main-network:
+    external: true

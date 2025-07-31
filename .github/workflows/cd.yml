@@ -215,6 +215,7 @@ jobs:
             export AI_HOST_URL=${{ secrets.AI_HOST_URL }}
             export SEARCH_API_URL=${{ secrets.SEARCH_API_URL_STAGING }}
             export TRACING_GRPC_SPRING=${{ secrets.TRACING_GRPC_SPRING_STAGING }}
+            export X_API_KEY=${{ secrets.X_API_KEY }}
 
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
               echo "Deploying Nest Stack..." | tee -a $LOG_FILE

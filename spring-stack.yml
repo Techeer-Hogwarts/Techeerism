@@ -3,6 +3,8 @@ services:
     image: suhach0523/techeerism-spring:$IMAGE_TAG
     networks:
       - main-network
+    ports:
+      - "8001:8000"
     environment:
       - DATABASE_URL=$DATABASE_URL_SPRING
       - POSTGRES_USERNAME=$POSTGRES_USER

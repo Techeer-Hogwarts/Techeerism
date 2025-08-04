@@ -137,6 +137,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=15d'
       - '--storage.tsdb.retention.size=3GB'
+      - '--web.enable-lifecycle=true'
     deploy:
       placement:
         constraints:

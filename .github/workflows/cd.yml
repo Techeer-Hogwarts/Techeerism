@@ -123,7 +123,7 @@ jobs:
             export ZOOM_WEBHOOK_SECRET=${{ secrets.ZOOM_WEBHOOK_SECRET }}
             export ZOOM_WEBHOOK_VERIFICATION_TOKEN=${{ secrets.ZOOM_WEBHOOK_VERIFICATION_TOKEN }}
             export ZOOM_DEFAULT_MEETING_ID=${{ secrets.ZOOM_DEFAULT_MEETING_ID }}
-            export GITHUB_API_TOKEN=${{ secrets.GITHUB_API_TOKEN }}
+            export GITHUB_API_TOKEN=${{ secrets.GH_API_TOKEN }}
 
 
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
@@ -224,7 +224,7 @@ jobs:
             export ZOOM_WEBHOOK_SECRET=${{ secrets.ZOOM_WEBHOOK_SECRET }}
             export ZOOM_WEBHOOK_VERIFICATION_TOKEN=${{ secrets.ZOOM_WEBHOOK_VERIFICATION_TOKEN }}
             export ZOOM_DEFAULT_MEETING_ID=${{ secrets.ZOOM_DEFAULT_MEETING_ID }}
-            export GITHUB_API_TOKEN=${{ secrets.GITHUB_API_TOKEN }}
+            export GITHUB_API_TOKEN=${{ secrets.GH_API_TOKEN }}
 
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
               echo "Deploying Nest Stack..." | tee -a $LOG_FILE

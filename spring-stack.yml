@@ -95,8 +95,8 @@ services:
         - traefik.http.routers.spring-main.entrypoints=websecure
         - traefik.http.routers.spring-main.rule=Host(`api.techeerzip.cloud`) && PathPrefix(`/api/v3`)
         - traefik.http.routers.spring-main.tls.certresolver=letsencrypt
-        - traefik.http.middlewares.ratelimit-middleware2-spring.ratelimit.average=10
-        - traefik.http.middlewares.ratelimit-middleware2-spring.ratelimit.burst=20
+        - traefik.http.middlewares.ratelimit-middleware2-spring.ratelimit.average=20
+        - traefik.http.middlewares.ratelimit-middleware2-spring.ratelimit.burst=40
         - traefik.http.routers.spring-main.middlewares=ratelimit-middleware2-spring
 
 networks:

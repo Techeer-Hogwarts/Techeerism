@@ -94,8 +94,8 @@ services:
         - traefik.http.routers.spring.entryPoints=websecure
         - traefik.http.routers.spring.rule=Host(`api.yje.kr`) && PathPrefix(`/api/v3`)
         - traefik.http.routers.spring.tls.certResolver=letsencrypt
-        - traefik.http.middlewares.ratelimit-middleware2.ratelimit.average=10
-        - traefik.http.middlewares.ratelimit-middleware2.ratelimit.burst=20
+        - traefik.http.middlewares.ratelimit-middleware2.ratelimit.average=50
+        - traefik.http.middlewares.ratelimit-middleware2.ratelimit.burst=100
         - traefik.http.routers.spring.middlewares=ratelimit-middleware2
 
 networks:

@@ -1,0 +1,19 @@
+services:
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - dev_tracing-network
+      - dev_search-network
+
+volumes:
+  grafana_data:
+
+networks:
+  dev_tracing-network:
+    external: true
+  dev_search-network:
+    external: true

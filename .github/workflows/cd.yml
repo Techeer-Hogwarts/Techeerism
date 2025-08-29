@@ -370,10 +370,10 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PASSWORD }}
           script: |
-            rm -f /home/ubuntu/nest-stack.yml
-            rm -f /home/ubuntu/parser-stack.yml
-            rm -f /home/ubuntu/crawler-stack.yml
-            rm -f /home/ubuntu/spring-stack.yml
+            rm -f /home/jungeun/nest-stack.yml
+            rm -f /home/jungeun/parser-stack.yml
+            rm -f /home/jungeun/crawler-stack.yml
+            rm -f /home/jungeun/spring-stack.yml
 
       - name: Clean Up Files in Server Staging
         if: ${{ github.event.inputs.environment == 'staging' }}

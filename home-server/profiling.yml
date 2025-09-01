@@ -1,0 +1,22 @@
+services:
+  pyroscope:
+    image: grafana/pyroscope:latest
+    ports:
+      - "4040:4040"
+    volumes:
+      - pyroscope_data:/var/lib/pyroscope
+    command:
+      - "--storage.filesystem.dir=/var/lib/pyroscope/data"
+      - "--pyroscopedb.retention-policy-min-free-disk-gb=100"
+      - "--pyroscopedb.retention-policy-min-disk-available-percentage=0.40"
+      - "--log.level=info"
+    networks:
+      - dev_tracing-network
+
+volumes:
+  pyroscope_data:
+
+networks:
+  dev_tracing-network:
+    external: true
+    

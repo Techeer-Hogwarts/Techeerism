@@ -129,6 +129,7 @@ jobs:
             export SLACK_CHANNEL_BLOG_CHALLENGE_ID=${{ secrets.SLACK_CHANNEL_BLOG_CHALLENGE_ID }}
             export SLACK_CHANNEL_EMERGENCY_ALERT_ID=${{ secrets.SLACK_CHANNEL_EMERGENCY_ALERT_ID }}
             export SLACKBOT_MESSAGE_URL=${{ secrets.SLACKBOT_MESSAGE_URL }}
+            export PYROSCOPE_SERVER_URL=${{ secrets.PYROSCOPE_SERVER_URL }}
 
 
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
@@ -235,6 +236,7 @@ jobs:
             export SLACK_CHANNEL_BLOG_CHALLENGE_ID=${{ secrets.SLACK_CHANNEL_DEV }}
             export SLACK_CHANNEL_EMERGENCY_ALERT_ID=${{ secrets.SLACK_CHANNEL_DEV }}
             export SLACKBOT_MESSAGE_URL=${{ secrets.SLACKBOT_MESSAGE_URL }}
+            export PYROSCOPE_SERVER_URL=${{ secrets.PYROSCOPE_SERVER_URL }}
 
             if [ "$IMAGE_NAME" == "suhach0523/techeerism-nest" ]; then
               echo "Deploying Nest Stack..." | tee -a $LOG_FILE

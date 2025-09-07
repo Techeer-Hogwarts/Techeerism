@@ -2,9 +2,7 @@ services:
   crawler:
     image: suhach0523/techeerism-crawler:$IMAGE_TAG
     networks:
-      - staging-network
-    env_file:
-      - .env
+      - main-network
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
@@ -12,16 +10,20 @@ services:
       - RABBITMQ_USER=$RABBITMQ_DEFAULT_USER
       - RABBITMQ_PASSWORD=$RABBITMQ_DEFAULT_PASS
       - RABBITMQ_HOST=$RABBITMQ_HOST
-    # labels:
-    #   - logging=promtail
-    #   - logging_jobname=crawler
-    # restart: always
+      - TRACING_GRPC=$TRACING_GRPC
     tty: true
     deploy:
       replicas: $SERVICE_REPLICAS
       placement:
         constraints:
           - node.labels.instance == staging
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 500M
+        reservations:
+          cpus: "0.25"
+          memory: 100MB
       update_config:
         parallelism: 1
         delay: 10s

@@ -210,8 +210,8 @@ jobs:
             export GOOGLE_AUTH_CLIENT_EMAIL=${{ secrets.GOOGLE_AUTH_CLIENT_EMAIL }}
             export GOOGLE_AUTH_CLIENT_ID=${{ secrets.GOOGLE_AUTH_CLIENT_ID }}
             export GOOGLE_AUTH_CLIENT_X509_CERT_URL=${{ secrets.GOOGLE_AUTH_CLIENT_X509_CERT_URL }}
-            export GOOGLE_FOLDER_ID=${{ secrets.GOOGLE_FOLDER_ID }}
-            export ARCHIVE_FOLDER_ID=${{ secrets.ARCHIVE_FOLDER_ID }}
+            export GOOGLE_FOLDER_ID=${{ secrets.GOOGLE_FOLDER_ID_STAGING }}
+            export ARCHIVE_FOLDER_ID=${{ secrets.ARCHIVE_FOLDER_ID_STAGING }}
             export SLACKBOT_URL=${{ secrets.SLACKBOT_URL }}
             export SLACKBOT_PERSONAL_URL=${{ secrets.SLACKBOT_PERSONAL_URL }}
             export PROJECT_NAME=${{ secrets.PROJECT_NAME }}
